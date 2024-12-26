@@ -1,0 +1,34 @@
+[package]
+name = "jskse_core"
+version = "0.0.1"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Core library for JSKSE plugins"
+
+[lib]
+path = "lib.rs"
+crate-type = ["staticlib"]
+
+[dependencies]
+boa_engine.workspace = true
+chardet.workspace = true
+cxx.workspace = true
+deno_ast.workspace = true
+deno_core.workspace = true
+reqwest.workspace = true
+encoding-next.workspace = true
+log.workspace = true
+rust-ini.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+simplelog.workspace = true
+anyhow = "1.0.95"
+
+[build-dependencies]
+cxx-build = "1.0.110"
+deno_core = "0.327"
+
+[profile.release]
+debug = true

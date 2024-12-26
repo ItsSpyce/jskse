@@ -5,7 +5,7 @@ set(CARGO_TARGET_DIR ${CMAKE_SOURCE_DIR}/target)
 # Where CXX Bridge artifacts are located
 set(CXX_BRIDGE_ARTIFACTS ${CARGO_TARGET_DIR}/cxxbridge)
 # Rust monorepo directory
-set(RUST_MONOREPO_DIR ${CMAKE_SOURCE_DIR}/packages)
+set(RUST_MONOREPO_DIR ${CMAKE_SOURCE_DIR}/crates)
 # JSKSE_CORE directory. This is the entry point for the Rust implementation
 set(RUST_JSKSE_CORE ${RUST_MONOREPO_DIR}/jskse_core)
 # JSKSE_MODULES directory. All JS modules are from here

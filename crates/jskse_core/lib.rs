@@ -4,11 +4,16 @@
 //! The Rust library.
 
 pub mod bridge;
+pub mod js;
+pub mod module_loader;
+pub mod ops;
+
+mod event_loop;
 
 use bridge::cosave::*;
-use bridge::js::*;
 use bridge::logs::*;
 use bridge::strings::*;
+use js::*;
 
 /// This is the cxx bridge submodule. This is where all shared data types and
 /// functions are declared, so that the cxx macros can generate code for them.

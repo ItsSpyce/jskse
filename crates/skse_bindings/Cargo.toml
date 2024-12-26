@@ -1,27 +1,19 @@
 [package]
-name = "jskse_core"
+name = "skse_bindings"
 version = "0.0.1"
 authors.workspace = true
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "Core library for JSKSE plugins"
+description = "Bindings for SKSE plugins"
 
 [lib]
 path = "lib.rs"
 crate-type = ["staticlib"]
 
 [dependencies]
-boa_engine.workspace = true
-chardet.workspace = true
 cxx.workspace = true
+chardet.workspace = true
 encoding-next.workspace = true
 log.workspace = true
-rust-ini.workspace = true
 simplelog.workspace = true
-
-[build-dependencies]
-cxx-build = "1.0.110"
-
-[profile.release]
-debug = true

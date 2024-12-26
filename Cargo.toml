@@ -9,15 +9,20 @@ repository = "https://github.com/ItsSpyce/jskse"
 
 [workspace]
 resolver = "2"
-members = ["packages/jskse_core", "packages/jskse_modules"]
+members = ["crates/jskse_core", "crates/jskse_modules"]
 
 [workspace.dependencies]
 boa_engine = "0.17.3"
 chardet = "0.2.4"
 cxx = { version = "1.0.110", features = ["c++20"] }
+deno_ast = { version = "0.42", features = ["transpiling"] }
+deno_core = "0.327"
+reqwest = "0.12"
 encoding-next = "0.3.0"
 log = "0.4.20"
 rust-ini = "0.20.0"
+serde = "1.0.216"
+serde_json = "1.0.134"
 simplelog = "0.12.1"
 
 [profile.release]

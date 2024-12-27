@@ -12,23 +12,25 @@ path = "lib.rs"
 crate-type = ["staticlib"]
 
 [dependencies]
-boa_engine.workspace = true
-chardet.workspace = true
-cxx.workspace = true
-deno_ast.workspace = true
-deno_core.workspace = true
-reqwest.workspace = true
-encoding-next.workspace = true
-log.workspace = true
-rust-ini.workspace = true
-serde.workspace = true
-serde_json.workspace = true
-simplelog.workspace = true
+boa_engine = "0.17.3"
+chardet = "0.2.4"
+cxx = { version = "1.0.110", features = ["c++20"] }
+deno_ast = { version = "0.42", features = ["transpiling"] }
+deno_core = "0.327"
+reqwest = "0.12"
+encoding-next = "0.3.0"
+log = "0.4.20"
+rust-ini = "0.20.0"
+serde = "1.0.216"
+serde_json = "1.0.134"
+simplelog = "0.12.1"
 anyhow = "1.0.95"
+dirs = "5.0.1"
 
 [build-dependencies]
 cxx-build = "1.0.110"
 deno_core = "0.327"
+cbindgen = "0.27.0"
 
 [profile.release]
 debug = true

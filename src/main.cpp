@@ -1,9 +1,8 @@
-#include "bridge/js.hpp"
-#include "cosave.h"
-#include "hooks.h"
 #include "jskse_core/lib.rs.h"
-#include "papyrus.h"
-#include "sinks.h"
+#include "skse/cosave.h"
+#include "skse/hooks.h"
+#include "skse/papyrus.h"
+#include "skse/sinks.h"
 
 void initializeLogging() {
   if (static bool initialized = false; !initialized) {
@@ -13,20 +12,7 @@ void initializeLogging() {
   }
 
   try {
-    auto path = SKSE::log::log_directory();
-    if (!path) {
-      stl::report_and_fail("failed to get standard log path"sv);
-    }
-
-    *path /= fmt::format("{}.log"sv, Version::PROJECT);
-    const auto input = path->generic_wstring();
-    std::vector<uint16_t> bytes;
-    bytes.reserve(input.length());
-    for (const wchar_t iter : input) {
-      bytes.push_back(static_cast<uint16_t>(iter));
-    }
-    // tell rust where to log
-    initialize_logging(std::move(bytes));
+    logging::configure_logging();
   } catch (const std::exception& e) {
     stl::report_and_fail(fmt::format("failed, what={}"sv, e.what()));
   }
@@ -36,8 +22,8 @@ void initializeLogging() {
 void message_callback(SKSE::MessagingInterface::Message* msg) {
   switch (msg->type) {
     case SKSE::MessagingInterface::kDataLoaded:
-      installFunctionHooks();
-      papyrus::registerNativeFunctions();
+      hooks::install();
+      papyrus::register_native_functions();
       registerEventSinks();
       break;
     default:
@@ -56,8 +42,7 @@ SKSEPlugin_Load(const SKSE::LoadInterface* a_skse) {
 
   rlog::info("Game version {}", a_skse->RuntimeVersion().string());
   Init(a_skse);
-  cosave::initializeCosaves();
-  jskse::initialize_js_engine();
+  cosave::initialize_cosaves();
 
   SKSE::AllocTrampoline(14 * 3);
 

@@ -1,6 +1,6 @@
 #include "util.h"
 
-#include "jskse_core/lib.rs.h"
+#include "bridge/strings.rs.h"
 
 namespace util {
 // How you know I've been replaced by a pod person: if I ever declare that
@@ -26,7 +26,7 @@ std::vector<uint8_t> chars_to_vec(const char* input) {
 std::string nameAsUtf8(const RE::TESForm* form) {
   auto name = form->GetName();
   auto chonker = chars_to_vec(name);
-  auto safename = std::string(cstr_to_utf8(chonker));
+  auto safename = std::string(strings::cstr_to_utf8(chonker));
   return safename;
 }
 

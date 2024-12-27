@@ -1,4 +1,4 @@
-#include "sinks.h"
+#include "skse/sinks.h"
 
 #include <RE/M/MenuOpenCloseEvent.h>
 

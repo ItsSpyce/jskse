@@ -1,7 +1,7 @@
 #![allow(static_mut_refs)]
 
 use crate::module_loader::JskseModuleLoader;
-use crate::{event_loop, ops::*};
+use crate::ops::*;
 use deno_core::futures::{self, FutureExt};
 use deno_core::PollEventLoopOptions;
 use deno_core::{error::AnyError, extension, JsRuntime, RuntimeOptions};
@@ -44,7 +44,6 @@ async fn jskse(file_path: &str) -> Result<(), AnyError> {
         wait_for_inspector: true,
     };
     let _ = js_runtime.run_event_loop(poll_options);
-    // move js_runtime into RUNTIME
 
     unsafe {
         *RUNTIME.lock().unwrap() = Some(js_runtime);
@@ -55,6 +54,9 @@ async fn jskse(file_path: &str) -> Result<(), AnyError> {
 pub fn initialize_engine() {
     // we can't use Tokio because it uses MSVC incompatible libraries
     jskse("./example.js");
-    let event_loop =
-        event_loop::SKSEEventLoop::new(unsafe { RUNTIME.lock().unwrap().as_mut().unwrap() });
+}
+
+#[repr(C)]
+pub struct InitializeEngineCallback {
+    callback: extern "C" fn(),
 }

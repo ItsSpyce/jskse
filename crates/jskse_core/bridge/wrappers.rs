@@ -28,3 +28,12 @@ pub fn translated_key(key: &str) -> String {
 pub fn translated_key(key: &str) -> String {
     format!("translation of {key}")
 }
+
+#[cxx::bridge]
+pub mod wrappers {
+    #[namespace = "wrappers"]
+    extern "Rust" {
+        fn notify(msg: &str);
+        fn translated_key(key: &str) -> String;
+    }
+}

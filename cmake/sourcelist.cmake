@@ -1,11 +1,11 @@
 set(headers ${headers}
-    src/PCH.h
-    src/skse/cosave.h
-    src/skse/hooks.h
-    src/skse/papyrus.h
-    src/skse/sinks.h
-    src/util/log.h
-    src/util/util.h
+    include/PCH.h
+    include/skse/cosave.h
+    include/skse/hooks.h
+    include/skse/papyrus.h
+    include/skse/sinks.h
+    include/log.h
+    include/util.h
 )
 set(sources ${sources}
     ${headers}
@@ -14,5 +14,5 @@ set(sources ${sources}
     src/skse/hooks.cpp
     src/skse/papyrus.cpp
     src/skse/sinks.cpp
-    src/util/util.cpp
+    src/util.cpp
 )

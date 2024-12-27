@@ -53,6 +53,15 @@ pub fn convert_to_utf8(bytes: Vec<u8>) -> String {
     String::from_utf8_lossy(&bytes).to_string()
 }
 
+#[cxx::bridge]
+pub mod strings {
+    #[namespace = "strings"]
+    extern "Rust" {
+        fn cstr_to_utf8(bytes_ffi: &CxxVector<u8>) -> String;
+        fn string_to_int(number: String) -> i32;
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

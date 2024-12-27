@@ -48,3 +48,13 @@ pub fn cosave_loaded(ffi_bytes: &CxxVector<u8>, version: u32) {
         }
     }
 }
+
+#[cxx::bridge]
+pub mod cosave {
+    #[namespace = "cosave"]
+    extern "Rust" {
+        fn cosave_data_version() -> u32;
+        fn cosave_data() -> Vec<u8>;
+        fn cosave_loaded(bytes: &CxxVector<u8>, version: u32);
+    }
+}

@@ -2,9 +2,9 @@
 
 namespace papyrus
 {
-	void registerNativeFunctions();
+	void register_native_functions();
 	bool callback(RE::BSScript::IVirtualMachine* a_vm);
 
 	// A contrived example.
-	int stringToInt(RE::TESQuest*, RE::BSFixedString number);
+	int string_to_int(RE::TESQuest*, RE::BSFixedString number);
 };

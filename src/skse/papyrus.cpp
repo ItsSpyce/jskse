@@ -1,27 +1,21 @@
-#include "papyrus.h"
+#include "skse/papyrus.h"
 
-#include "jskse_core/lib.rs.h"
+#include "bridge/strings.rs.h"
 
-namespace papyrus
-{
-	static const char* MCM_NAME = "jskse";
+static auto mcm_name = "jskse";
 
-	void registerNativeFunctions()
-	{
-		const auto* papyrus = SKSE::GetPapyrusInterface();
-		papyrus->Register(callback);
-	}
+void papyrus::register_native_functions() {
+  const auto* papyrus = SKSE::GetPapyrusInterface();
+  papyrus->Register(callback);
+}
 
-	bool callback(RE::BSScript::IVirtualMachine* a_vm)
-	{
-		a_vm->RegisterFunction("StringToInt", MCM_NAME, stringToInt);
-		return true;
-	}
+bool papyrus::callback(RE::BSScript::IVirtualMachine* a_vm) {
+  a_vm->RegisterFunction("StringToInt", mcm_name, string_to_int);
+  return true;
+}
 
-	int stringToInt(RE::TESQuest*, RE::BSFixedString number)
-	{
-		auto numstr = std::string(number);
-		// Here we call a Rust function that we've pulled in from the bridge.
-		return string_to_int(numstr);
-	}
+int papyrus::string_to_int(RE::TESQuest*, RE::BSFixedString number) {
+  auto numstr = std::string(number);
+  // Here we call a Rust function that we've pulled in from the bridge.
+  return strings::string_to_int(numstr);
 }

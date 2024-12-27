@@ -5,15 +5,12 @@ use std::rc::Rc;
 
 use anyhow::anyhow;
 use anyhow::bail;
-use anyhow::Context;
 use anyhow::Error;
 use deno_ast::MediaType;
 use deno_ast::ParseParams;
 use deno_ast::SourceMapOption;
 use deno_core::error::AnyError;
 use deno_core::resolve_import;
-use deno_core::resolve_path;
-use deno_core::JsRuntime;
 use deno_core::ModuleLoadResponse;
 use deno_core::ModuleLoader;
 use deno_core::ModuleSource;
@@ -22,15 +19,8 @@ use deno_core::ModuleSpecifier;
 use deno_core::ModuleType;
 use deno_core::RequestedModuleType;
 use deno_core::ResolutionKind;
-use deno_core::RuntimeOptions;
 
-// TODO(bartlomieju): this is duplicated in `testing/checkin`
 type SourceMapStore = Rc<RefCell<HashMap<String, Vec<u8>>>>;
-
-// TODO(bartlomieju): this is duplicated in `testing/checkin`
-struct TypescriptModuleLoader {
-    source_maps: SourceMapStore,
-}
 
 pub struct JskseModuleLoader {
     source_maps: SourceMapStore,

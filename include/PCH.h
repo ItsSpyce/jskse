@@ -7,29 +7,27 @@
 
 #include <RE/Skyrim.h>
 #include <SKSE/SKSE.h>
+#include <windows.h>
+#include <winuser.h>
 
 #include <algorithm>
 #include <cctype>
 #include <locale>
-#include <windows.h>
-#include <winuser.h>
 
 // Templates for sending C++ logging to Rust.
-#include "util/log.h"
+#include "log.h"
 
 using namespace std::literals;
 
-namespace stl
-{
-	using namespace SKSE::stl;
+namespace stl {
+using namespace SKSE::stl;
 
-	template <class T>
-	void write_thunk_call()
-	{
-		auto& trampoline = SKSE::GetTrampoline();
-		const REL::Relocation<std::uintptr_t> hook{ T::id, T::offset };
-		T::func = trampoline.write_call<5>(hook.address(), T::thunk);
-	}
+template <class T>
+void write_thunk_call() {
+  auto& trampoline = SKSE::GetTrampoline();
+  const REL::Relocation<std::uintptr_t> hook{T::id, T::offset};
+  T::func = trampoline.write_call<5>(hook.address(), T::thunk);
+}
 }  // namespace stl
 
 #define EXTERN_C extern "C"

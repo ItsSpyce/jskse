@@ -5,27 +5,24 @@
 //! file with Rust. For now, C++ must pass a preformatted-string to these functions.
 //! This is wasteful, but exposing Rust macros to C++ is not possible.
 
-use std::ffi::OsString;
-use std::fs::File;
 #[cfg(target_os = "windows")]
-use std::os::windows::ffi::OsStringExt;
-use std::path::Path;
-
 use simplelog::*;
+use std::fs::File;
 
-/// Create a log file in the directory SKSE wants us to, and initialize a logger.
-pub fn initialize_logging(_logdir: &cxx::CxxVector<u16>) {
-    #[cfg(not(target_os = "windows"))]
-    let chonky_path = OsString::from("placeholder");
-    #[cfg(target_os = "windows")]
-    let chonky_path = OsString::from_wide(_logdir.as_slice());
-    let path = Path::new(chonky_path.as_os_str()).with_file_name("jskse.log");
+use crate::skse_poly;
 
-    let Ok(logfile) = File::create(path) else {
-        // Welp, we failed and I have nowhere to write the darn error. Ha ha.
-        return;
+pub fn configure_logging() {
+    let log_directory = match skse_poly::log_directory() {
+        Ok(dir) => dir,
+        Err(err) => {
+            log::error!("Error getting log directory: {}", err);
+            panic!("Error getting log directory: {}", err);
+        }
     };
-    // You might look this up from config or user settings.
+    let log_file = log_directory.join("jskse.log");
+    let Ok(log_file) = File::create(log_file) else {
+        panic!("Failed to create log file");
+    };
     let log_level = log::LevelFilter::Debug;
     let config = simplelog::ConfigBuilder::new()
         .set_thread_level(LevelFilter::Off)
@@ -33,11 +30,10 @@ pub fn initialize_logging(_logdir: &cxx::CxxVector<u16>) {
         .set_location_level(LevelFilter::Trace)
         .set_target_level(LevelFilter::Trace)
         .build();
-    let Ok(_) = WriteLogger::init(log_level, config, logfile) else {
-        // oh dear
-        return;
+    let Ok(_) = WriteLogger::init(log_level, config, log_file) else {
+        panic!("Failed to initialize logger");
     };
-    log::info!("jskse version {} coming online.", env!("CARGO_PKG_VERSION"));
+    log::info!("Initialized logging, version {}", env!("CARGO_PKG_VERSION"));
 }
 
 /// For C++, log at the error level.
@@ -63,4 +59,17 @@ pub fn log_debug(message: String) {
 /// For C++, log at the trace level.
 pub fn log_trace(message: String) {
     log::trace!("{}", message);
+}
+
+#[cxx::bridge]
+pub mod logs {
+    #[namespace = "logging"]
+    extern "Rust" {
+        fn configure_logging();
+        fn log_warn(message: String);
+        fn log_info(message: String);
+        fn log_debug(message: String);
+        fn log_trace(message: String);
+        fn log_error(message: String);
+    }
 }

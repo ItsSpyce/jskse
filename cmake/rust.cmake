@@ -27,10 +27,12 @@ macro (add_rust_monorepo_project _TARGET_NAME)
   message(STATUS "\tRUST_${TARGET_NAME}_CPP: ${RUST_${TARGET_NAME}_CPP}")
   set("RUST_${TARGET_NAME}_LIB" "${CARGO_TARGET_DIR}/release/${CMAKE_STATIC_LIBRARY_PREFIX}${TARGET_NAME_LOWERED}${CMAKE_STATIC_LIBRARY_SUFFIX}")
   message(STATUS "\tRUST_${TARGET_NAME}_LIB: ${RUST_${TARGET_NAME}_LIB}")
+  include_directories(target/cxxbridge/${TARGET_NAME_LOWERED})
 
   add_custom_command(
     OUTPUT ${RUST_${TARGET_NAME}_CPP} ${RUST_${TARGET_NAME}_LIB}
-    COMMAND cargo build --manifest-path ${CARGO_MANIFEST} --release
+    WORKING_DIRECTORY ${RUST_${TARGET_NAME}_DIR}
+    COMMAND cargo build --release
     DEPENDS ${RUST_${TARGET_NAME}_SOURCES}
     USES_TERMINAL
     COMMENT "Running Cargo for target ${TARGET_NAME}..."
@@ -38,4 +40,4 @@ macro (add_rust_monorepo_project _TARGET_NAME)
 endmacro ()
 
 add_rust_monorepo_project(JSKSE_CORE)
-add_rust_monorepo_project(JSKSE_MODULES)
+#add_rust_monorepo_project(JSKSE_MODULES)

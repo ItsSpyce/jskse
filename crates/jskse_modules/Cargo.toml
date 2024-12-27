@@ -12,13 +12,7 @@ path = "lib.rs"
 crate-type = ["staticlib"]
 
 [dependencies]
-boa_engine.workspace = true
-chardet.workspace = true
-cxx.workspace = true
-encoding-next.workspace = true
-log.workspace = true
-rust-ini.workspace = true
-simplelog.workspace = true
+
 
 [profile.release]
 debug = true

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "jskse_core/lib.rs.h"
+#include "bridge/logs.rs.h"
 
 // Templates that turn format strings into calls to the rust logger.
 // The C++ calls them in the usual way:
@@ -39,7 +39,7 @@ namespace rlog
 			std::source_location loc = std::source_location::current())
 		{
 			const auto msg = fmt::format(fmtstr, std::forward<Args>(args)...);
-			log_error(msg);
+			logging::log_error(msg);
 		}
 	};
 
@@ -56,7 +56,7 @@ namespace rlog
 		explicit error(fmt::format_string<Args...> fmtstr, Args&&... args)
 		{
 			const auto msg = fmt::format(fmtstr, std::forward<Args>(args)...);
-			log_error(msg);
+			logging::log_error(msg);
 		}
 	};
 
@@ -73,7 +73,7 @@ namespace rlog
 		explicit warn(fmt::format_string<Args...> fmtstr, Args&&... args)
 		{
 			const auto msg = fmt::format(fmtstr, std::forward<Args>(args)...);
-			log_warn(msg);
+			logging::log_warn(msg);
 		}
 	};
 
@@ -90,7 +90,7 @@ namespace rlog
 		explicit info(fmt::format_string<Args...> fmtstr, Args&&... args)
 		{
 			const auto msg = fmt::format(fmtstr, std::forward<Args>(args)...);
-			log_info(msg);
+			logging::log_info(msg);
 		}
 	};
 
@@ -113,7 +113,7 @@ namespace rlog
 
 			const auto msg      = fmt::format(fmtstr, std::forward<Args>(args)...);
 			const auto with_loc = fmt::format("{}:{}: {}", filename, static_cast<int>(loc.line()), msg);
-			log_debug(with_loc);
+			logging::log_debug(with_loc);
 		}
 	};
 
@@ -136,7 +136,7 @@ namespace rlog
 
 			const auto msg      = fmt::format(fmtstr, std::forward<Args>(args)...);
 			const auto with_loc = fmt::format("{}:{}: {}", filename, static_cast<int>(loc.line()), msg);
-			log_trace(with_loc);
+			logging::log_trace(with_loc);
 		}
 	};
 

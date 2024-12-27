@@ -92,6 +92,12 @@ find_package(spdlog REQUIRED CONFIG)
 #     link_directories(${Boost_LIBRARY_DIRS})
 # endif ()
 
+
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
 source_group(
     TREE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -199,15 +205,6 @@ endif()
 
 add_subdirectory(${CommonLibPath} ${CommonLibName} EXCLUDE_FROM_ALL)
 
-target_include_directories(
-    ${PROJECT_NAME}
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/skse
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/util
-    ${CMAKE_CURRENT_BINARY_DIR}/include
-)
-
 # The last few of these are surprising, but are pulled in by some of the rust crates
 # included in the Rust library.
 target_link_libraries(
@@ -229,5 +226,5 @@ target_link_libraries(
 target_precompile_headers(
     ${PROJECT_NAME}
     PRIVATE
-    src/PCH.h
+    include/PCH.h
 )

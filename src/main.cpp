@@ -1,10 +1,10 @@
-#include "jskse_core/lib.rs.h"
-#include "skse/cosave.h"
-#include "skse/hooks.h"
-#include "skse/papyrus.h"
-#include "skse/sinks.h"
+#include "bridge/cosave.h"
+#include "bridge/hooks.h"
+#include "bridge/papyrus.h"
+#include "bridge/sinks.h"
+#include "bridge/rimgui.h"
 
-void initializeLogging() {
+void initialize_logging() {
   if (static bool initialized = false; !initialized) {
     initialized = true;
   } else {
@@ -24,7 +24,7 @@ void message_callback(SKSE::MessagingInterface::Message* msg) {
     case SKSE::MessagingInterface::kDataLoaded:
       hooks::install();
       papyrus::register_native_functions();
-      registerEventSinks();
+      register_event_sinks();
       break;
     default:
       break;
@@ -38,7 +38,7 @@ void message_callback(SKSE::MessagingInterface::Message* msg) {
 // main hooking and event listening.
 EXTERN_C [[maybe_unused]] __declspec(dllexport) bool SKSEAPI
 SKSEPlugin_Load(const SKSE::LoadInterface* a_skse) {
-  initializeLogging();
+  initialize_logging();
 
   rlog::info("Game version {}", a_skse->RuntimeVersion().string());
   Init(a_skse);

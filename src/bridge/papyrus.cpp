@@ -1,4 +1,4 @@
-#include "skse/papyrus.h"
+#include "bridge/papyrus.h"
 
 #include "bridge/strings.rs.h"
 

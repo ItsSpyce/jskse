@@ -5,3 +5,8 @@
 #include <cstdlib>
 #include <ostream>
 #include <new>
+#include <imgui.h>
+
+namespace cbindgen {
+
+}  // namespace cbindgen

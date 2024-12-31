@@ -2,13 +2,13 @@
 
 // a conditional use statement...
 #[cfg(not(test))]
-use crate::jskse_core::{lookupTranslation, notifyPlayer};
+use crate::cxx::jskse_cxx::{lookup_translation, notify_player};
 
 /// Convenience function for printing a message on the screen.
 #[cfg(not(test))]
 pub fn notify(msg: &str) {
     cxx::let_cxx_string!(message = msg);
-    notifyPlayer(&message);
+    notify_player(&message);
 }
 
 // Note the stub to prevent test compilation from trying to pull in the game dll.
@@ -20,7 +20,7 @@ pub fn notify(_msg: &str) {}
 #[cfg(not(test))]
 pub fn translated_key(key: &str) -> String {
     cxx::let_cxx_string!(cxxkey = key);
-    lookupTranslation(&cxxkey)
+    lookup_translation(&cxxkey)
 }
 
 // Note the stub to prevent test compilation from trying to pull in the game dll.

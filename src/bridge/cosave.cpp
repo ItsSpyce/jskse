@@ -1,4 +1,4 @@
-#include "skse/cosave.h"
+#include "bridge/cosave.h"
 
 #include "bridge/cosave.rs.h"
 
@@ -56,4 +56,3 @@ void cosave::on_game_loaded(SKSE::SerializationInterface* cosave) {
     }
   }
 }
-

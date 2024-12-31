@@ -1,8 +1,7 @@
 #pragma once
 #include <RE/B/BSTEvent.h>
-#include <RE/U/UI.h>
 
-void registerEventSinks();
+void register_event_sinks();
 
 // I am hilarious. Truly hilarious.
 class KitchenSink final : public RE::BSTEventSink<RE::MenuOpenCloseEvent>

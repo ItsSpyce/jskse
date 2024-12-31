@@ -1,10 +1,10 @@
-#include "skse/sinks.h"
+#include "bridge/sinks.h"
 
 #include <RE/M/MenuOpenCloseEvent.h>
 
 #include "log.h"
 
-void registerEventSinks() {
+void register_event_sinks() {
   auto listener = KitchenSink::singleton();
   RE::UI::GetSingleton()->AddEventSink<RE::MenuOpenCloseEvent>(listener);
   rlog::info("Registered sink for menu open/close events.");

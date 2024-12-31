@@ -5,15 +5,19 @@ use deno_core::{
     extension,
     snapshot::{create_snapshot, CreateSnapshotOptions},
 };
-use std::{env, path::PathBuf};
+use std::{
+    env,
+    path::{Path, PathBuf},
+};
 use std::{fs, io};
 
 static BRIDGE_FILES: &[&str] = &[
-    "lib.rs",
-    "bridge/cosave.rs",
-    "bridge/logs.rs",
-    "bridge/strings.rs",
-    "bridge/wrappers.rs",
+    "src/cxx.rs",
+    "src/bridge/cosave.rs",
+    "src/bridge/rimgui.rs",
+    "src/bridge/logs.rs",
+    "src/bridge/strings.rs",
+    "src/bridge/wrappers.rs",
 ];
 
 fn main() {
@@ -54,16 +58,20 @@ fn main() {
     }
     let root_dir = root_dir.unwrap();
     let crate_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
+    let crate_dir = Path::new(&crate_dir);
     let header_file = format!(
         "{root_dir}/include/{}.h",
         env::var("CARGO_PKG_NAME").unwrap()
     );
     println!("Generating bindings for {}", header_file);
     cbindgen::Builder::new()
-        .with_crate(crate_dir.clone())
+        .with_crate(crate_dir.to_str().unwrap())
         .with_pragma_once(true)
         .with_cpp_compat(true)
         .with_language(cbindgen::Language::Cxx)
+        .with_sys_include("imgui.h")
+        .with_namespace("cbindgen")
+        .include_item("cxx.rs")
         .generate()
         .expect("Unable to generate bindings")
         .write_to_file(header_file.clone());

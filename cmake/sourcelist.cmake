@@ -1,18 +1,20 @@
 set(headers ${headers}
     include/PCH.h
-    include/skse/cosave.h
-    include/skse/hooks.h
-    include/skse/papyrus.h
-    include/skse/sinks.h
+    include/bridge/cosave.h
+    include/bridge/hooks.h
+    include/bridge/rimgui.h
+    include/bridge/papyrus.h
+    include/bridge/sinks.h
     include/log.h
     include/util.h
 )
 set(sources ${sources}
     ${headers}
     src/main.cpp
-    src/skse/cosave.cpp
-    src/skse/hooks.cpp
-    src/skse/papyrus.cpp
-    src/skse/sinks.cpp
+    src/bridge/cosave.cpp
+    src/bridge/hooks.cpp
+    src/bridge/papyrus.cpp
+    src/bridge/rimgui.cpp
+    src/bridge/sinks.cpp
     src/util.cpp
 )

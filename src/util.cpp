@@ -23,7 +23,7 @@ std::vector<uint8_t> chars_to_vec(const char* input) {
 }
 
 // Decode a wild-west item name to utf-8.
-std::string nameAsUtf8(const RE::TESForm* form) {
+std::string name_as_utf8(const RE::TESForm* form) {
   auto name = form->GetName();
   auto chonker = chars_to_vec(name);
   auto safename = std::string(strings::cstr_to_utf8(chonker));
@@ -31,13 +31,13 @@ std::string nameAsUtf8(const RE::TESForm* form) {
 }
 
 // Post a text notification to the screen.
-void notifyPlayer(const std::string& message) {
+void notify_player(const std::string& message) {
   auto* msg = message.c_str();
   RE::DebugNotification(msg);
 }
 
 // Look up a scaleform translation by key.
-rust::String lookupTranslation(const std::string& key) {
+rust::String lookup_translation(const std::string& key) {
   std::string translated = std::string();
   SKSE::Translation::Translate(key, translated);
   return translated;

@@ -10,6 +10,10 @@
     "rapidcsv",
     "directxtk",
     "rsm-binary-io",
-    "boost-stl-interfaces"
+    "boost-stl-interfaces",
+    {
+      "name": "imgui",
+      "features": ["dx11-binding", "freetype"]
+    }
   ]
 }

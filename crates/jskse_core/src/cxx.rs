@@ -1,18 +1,7 @@
-#![deny(future_incompatible, clippy::unwrap_used)]
-#![warn(rust_2018_idioms, trivial_casts)]
-
-//! The Rust library.
-
-pub mod bridge;
-pub mod js;
-pub mod module_loader;
-pub mod ops;
-pub mod skse_poly;
-
-use js::*;
+use crate::js::initialize_engine;
 
 #[cxx::bridge]
-pub mod jskse_core {
+pub mod jskse_cxx {
     #[namespace = "jskse"]
     extern "Rust" {
         fn initialize_engine();
@@ -29,8 +18,8 @@ pub mod jskse_core {
         // exports from specific C++ namespaces to Rust
         include!("util.h");
 
-        fn notifyPlayer(message: &CxxString);
-        fn lookupTranslation(key: &CxxString) -> String;
+        fn notify_player(message: &CxxString);
+        fn lookup_translation(key: &CxxString) -> String;
     }
 
     #[namespace = "RE"]

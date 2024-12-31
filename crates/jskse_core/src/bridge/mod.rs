@@ -3,5 +3,6 @@
 
 pub mod cosave;
 pub mod logs;
+pub mod rimgui;
 pub mod strings;
 pub mod wrappers;

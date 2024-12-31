@@ -6,9 +6,9 @@
 // Sorry about the file name.
 namespace util
 {
-	void notifyPlayer(const std::string& message);
-	rust::String lookupTranslation(const std::string& key);
+	void notify_player(const std::string& message);
+	rust::String lookup_translation(const std::string& key);
 
 	std::vector<uint8_t> chars_to_vec(const char* input);
-	std::string nameAsUtf8(const RE::TESForm* form);
+	std::string name_as_utf8(const RE::TESForm* form);
 }

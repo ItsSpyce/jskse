@@ -18,6 +18,9 @@ project(
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(rust)
 include(sourcelist)
+include(ultralight)
+
+find_package(imgui CONFIG REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -212,8 +215,10 @@ target_link_libraries(
     PRIVATE
     ${RUST_JSKSE_CORE_LIB}
     ${RUST_JSKSE_MODULES_LIB}
+    ${ULTRALIGHT_LIB}
     CommonLibSSE::CommonLibSSE
     spdlog::spdlog
+    imgui::imgui
     wsock32
     ws2_32
     bcrypt

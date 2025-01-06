@@ -1,8 +1,5 @@
 #pragma once
 
-// Pull in Cxx's rust types (not the plugin types).
-#include "rust/cxx.h"
-
 // Sorry about the file name.
 namespace util
 {

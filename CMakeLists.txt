@@ -18,9 +18,6 @@ project(
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(rust)
 include(sourcelist)
-include(ultralight)
-
-find_package(imgui CONFIG REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -88,6 +85,8 @@ set(Boost_USE_STATIC_RUNTIME OFF CACHE BOOL "")
 # Find our vcpkg dependencies.
 # find_package(CommonLibSSE CONFIG REQUIRED)
 find_package(spdlog REQUIRED CONFIG)
+find_package(Freetype REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 # find_package(Boost REQUIRED COMPONENTS stl-interfaces)
 # if (Boost_FOUND)
@@ -99,6 +98,7 @@ find_package(spdlog REQUIRED CONFIG)
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_BINARY_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/extern/stb
 )
 
 source_group(
@@ -184,7 +184,6 @@ if(MSVC)
         /external:W0
 
         /W4 # Warning level
-        /WX # Warning level (warnings are errors)
 
         "$<$<CONFIG:DEBUG>:>"
         "$<$<CONFIG:RELEASE>:/Zc:inline;/JMC-;/Ob3>"
@@ -215,10 +214,10 @@ target_link_libraries(
     PRIVATE
     ${RUST_JSKSE_CORE_LIB}
     ${RUST_JSKSE_MODULES_LIB}
-    ${ULTRALIGHT_LIB}
-    CommonLibSSE::CommonLibSSE
     spdlog::spdlog
     imgui::imgui
+    Freetype::Freetype
+    CommonLibSSE::CommonLibSSE
     wsock32
     ws2_32
     bcrypt

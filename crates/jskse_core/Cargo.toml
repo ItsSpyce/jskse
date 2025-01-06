@@ -12,7 +12,6 @@ path = "src/lib.rs"
 crate-type = ["staticlib"]
 
 [dependencies]
-boa_engine = "0.17.3"
 chardet = "0.2.4"
 cxx = { version = "1.0.110", features = ["c++20"] }
 deno_ast = { version = "0.42", features = ["transpiling"] }
@@ -26,15 +25,11 @@ serde_json = "1.0.134"
 simplelog = "0.12.1"
 anyhow = "1.0.95"
 dirs = "5.0.1"
-egui = "0.30.0"
-egui-directx11 = "0.6.0"
-egui-winit = { version = "0.29.1", default-features = false }
 windows = { version = "0.58.0", features = [
   "Win32_Graphics_Dxgi_Common",
   "Win32_Graphics_Direct3D",
   "Win32_Graphics_Direct3D11",
 ] }
-winit = { version = "0.30.5", default-features = false, features = ["rwh_06"] }
 
 [build-dependencies]
 cxx-build = "1.0.110"

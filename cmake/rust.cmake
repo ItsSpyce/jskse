@@ -12,6 +12,9 @@ set(RUST_JSKSE_CORE ${RUST_MONOREPO_DIR}/jskse_core)
 set(RUST_JSKSE_MODULES ${RUST_MONOREPO_DIR}/jskse_modules)
 
 include_directories(${CXX_BRIDGE_ARTIFACTS})
+set(headers ${headers}
+  ${CXX_BRIDGE_ARTIFACTS}/rust/cxx.h
+)
 
 macro (add_rust_monorepo_project _TARGET_NAME)
 

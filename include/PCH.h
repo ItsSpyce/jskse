@@ -9,6 +9,7 @@
 #include <SKSE/SKSE.h>
 #include <windows.h>
 #include <winuser.h>
+#include <rust/cxx.h>
 
 #include <algorithm>
 #include <cctype>

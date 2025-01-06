@@ -1,45 +1,51 @@
 #pragma once
-#include "bridge/cosave.rs.h"
 
-#define RIMGUI_VEC rust::Vec<float_t>
+#include <bridge/rimgui.rs.h>
+
+#define ARRAY_FLOAT(_SIZE) std::array<float, _SIZE>
+#define ARRAY_INT(_SIZE) std::array<int, _SIZE>
 
 namespace rimgui {
 
 /// Custom ImGui Builder functions/structs
 
-
 // Built-in ImGui functions
 
-bool Begin(rust::String name);
+bool Begin(const std::string& name, bool* open, int flags);
 void End();
-bool BeginChild(rust::String id, const RIMGUI_VEC &size, int child_flags,
-                int window_flags);
+bool BeginChild(const std::string& id, const ARRAY_FLOAT(2)& size,
+                int child_flags, int window_flags);
 void EndChild();
 bool IsWindowAppearing();
 bool IsWindowCollapsed();
 bool IsWindowFocused(int flags);
 bool IsWindowHovered(int flags);
-RIMGUI_VEC GetWindowPos();
-RIMGUI_VEC GetWindowSize();
+ARRAY_FLOAT(2) GetWindowPos();
+ARRAY_FLOAT(2) GetWindowSize();
 float GetWindowWidth();
 float GetWindowHeight();
-void SetNextWindowPos(RIMGUI_VEC &size, int cond, RIMGUI_VEC &pivot);
-void SetNextWindowSize(RIMGUI_VEC &size, int cond);
-void SetNextWindowSizeConstraints(RIMGUI_VEC &size_min, RIMGUI_VEC &size_max);
-void SetNextWindowContentSize(RIMGUI_VEC &size);
+void SetNextWindowPos(const ARRAY_FLOAT(2)& size, int cond,
+                      const ARRAY_FLOAT(2)& pivot);
+void SetNextWindowSize(const ARRAY_FLOAT(2)& size, int cond);
+void SetNextWindowSizeConstraints(const ARRAY_FLOAT(2)& size_min,
+                                  const ARRAY_FLOAT(2)& size_max);
+void SetNextWindowContentSize(const ARRAY_FLOAT(2)& size);
 void SetNextWindowCollapsed(bool collapsed, int cond);
 void SetNextWindowFocus();
-void SetNextWindowScroll(RIMGUI_VEC &scroll);
+void SetNextWindowScroll(const ARRAY_FLOAT(2)& scroll);
 void SetNextWindowBgAlpha(float alpha);
-void SetWindowPos(RIMGUI_VEC &pos, int cond);
-void SetWindowSize(RIMGUI_VEC &size, int cond);
+void SetWindowPos(const ARRAY_FLOAT(2)& pos, int cond);
+void SetWindowSize(const ARRAY_FLOAT(2)& size, int cond);
 void SetWindowCollapsed(bool collapsed, int cond);
 void SetWindowFocus();
 void SetWindowFontScale(float scale);
-void SetWindowPosByName(rust::String name, RIMGUI_VEC &pos, int cond);
-void SetWindowSizeByName(rust::String name, RIMGUI_VEC &size, int cond);
-void SetWindowCollapsedByName(rust::String name, bool collapsed, int cond);
-void SetWindowFocusByName(rust::String name);
+void SetWindowPosByName(const std::string& name, const ARRAY_FLOAT(2)& pos,
+                        int cond);
+void SetWindowSizeByName(const std::string& name, const ARRAY_FLOAT(2)& size,
+                         int cond);
+void SetWindowCollapsedByName(const std::string& name, bool collapsed,
+                              int cond);
+void SetWindowFocusByName(const std::string& name);
 
 float GetScrollX();
 float GetScrollY();
@@ -53,9 +59,9 @@ void SetScrollFromPosX(float local_x, float center_x_ratio);
 void SetScrollFromPosY(float local_y, float center_y_ratio);
 
 void PopFont();
-void PushStyleColor(int idx, RIMGUI_VEC &col);
+void PushStyleColor(int idx, const ARRAY_FLOAT(4)& col);
 void PopStyleColor(int count);
-void PushStyleVar(int index, RIMGUI_VEC &val);
+void PushStyleVar(int index, const ARRAY_FLOAT(2)& val);
 void PopStyleVar(int count);
 void PushItemFlag(int option, bool enabled);
 void PopItemFlag();
@@ -68,26 +74,27 @@ void PushTextWrapPos(float wrap_local_pos_x);
 void PopTextWrapPos();
 
 float GetFontSize();
-RIMGUI_VEC GetFontTextUvWhitePixel();
-uint32_t GetColorU32(RIMGUI_VEC &col);
-RIMGUI_VEC GetStyleColorVec4(int idx);
+ARRAY_FLOAT(2) GetFontTextUvWhitePixel();
+uint32_t GetColorU32FromStyle(int idx, float alpha_mul);
+uint32_t GetColorU32(const ARRAY_FLOAT(4)& col);
+ARRAY_FLOAT(4) GetStyleColorVec4(int idx);
 
-RIMGUI_VEC GetCursorScreenPos();
-void SetCursorScreenPos(RIMGUI_VEC &pos);
-RIMGUI_VEC GetContentRegionAvail();
-RIMGUI_VEC GetCursorPos();
+ARRAY_FLOAT(2) GetCursorScreenPos();
+void SetCursorScreenPos(const ARRAY_FLOAT(2)& pos);
+ARRAY_FLOAT(2) GetContentRegionAvail();
+ARRAY_FLOAT(2) GetCursorPos();
 float GetCursorPosX();
 float GetCursorPosY();
-void SetCursorPos(RIMGUI_VEC &pos);
+void SetCursorPos(const ARRAY_FLOAT(2)& pos);
 void SetCursorPosX(float x);
 void SetCursorPosY(float y);
-RIMGUI_VEC GetCursorStartPos();
+ARRAY_FLOAT(2) GetCursorStartPos();
 
 void Separator();
 void SameLine(float offset_from_start_x, float spacing);
 void NewLine();
 void Spacing();
-void Dummy(RIMGUI_VEC &size);
+void Dummy(const ARRAY_FLOAT(2)& size);
 void Indent(float indent_w);
 void Unindent(float indent_w);
 void BeginGroup();
@@ -98,160 +105,294 @@ float GetTextLineHeightWithSpacing();
 float GetFrameHeight();
 float GetFrameHeightWithSpacing();
 
-void PushIDString(rust::String &id);
+void PushIDString(const std::string& id);
 void PushID(int id);
 void PopID();
-uint32_t GetIDFromString(rust::String &str);
+uint32_t GetIDFromString(const std::string& str);
 uint32_t GetID(int id);
 
-void TextUnformatted(rust::String &text, rust::String &text_end);
-void Text(rust::String &text, ...);
-void TextColored(RIMGUI_VEC &col, rust::String &text, ...);
-void TextDisabled(rust::String &text, ...);
-void TextWrapped(rust::String &text, ...);
-void LabelText(rust::String &label, rust::String &text, ...);
-void BulletText(rust::String &text, ...);
-void SeparatorText(rust::String &text);
+void TextUnformatted(const std::string& text);
+void Text(const std::string& text, const std::vector<std::string>& args);
+void TextColored(const ARRAY_FLOAT(4)& col, const std::string& text,
+                 const std::vector<std::string>& args);
+void TextDisabled(const std::string& text,
+                  const std::vector<std::string>& args);
+void TextWrapped(const std::string& text, const std::vector<std::string>& args);
+void LabelText(const std::string& label, const std::string& text,
+               const std::vector<std::string>& args);
+void BulletText(const std::string& text, const std::vector<std::string>& args);
+void SeparatorText(const std::string& text);
 
-bool Button(rust::String &label, RIMGUI_VEC &size);
-bool SmallButton(rust::String &label);
-bool InvisibleButton(rust::String &str_id, RIMGUI_VEC &size, int flags);
-bool ArrowButton(rust::String &str_id, int dir);
-bool Checkbox(rust::String &label, bool &v);
-bool CheckboxFlags(rust::String &label, int flags, int flags_value);
-bool RadioButtonBool(rust::String &label, bool active);
-bool RadioButton(rust::String &label, int &v, int v_button);
-void ProgressBar(float fraction, RIMGUI_VEC &size_arg, rust::String &overlay);
+bool Button(const std::string& label, const ARRAY_FLOAT(2)& size);
+bool SmallButton(const std::string& label);
+bool InvisibleButton(const std::string& str_id, const ARRAY_FLOAT(2)& size,
+                     int flags);
+bool ArrowButton(const std::string& str_id, int dir);
+bool Checkbox(const std::string& label, bool& v);
+bool CheckboxFlags(const std::string& label, int &flags, int flags_value);
+bool RadioButtonBool(const std::string& label, bool active);
+bool RadioButton(const std::string& label, int& v, int v_button);
+void ProgressBar(float fraction, const ARRAY_FLOAT(2)& size_arg,
+                 const std::string& overlay);
 void Bullet();
-bool TextLink(rust::String &label);
-void TextLinkOpenURL(rust::String &label, rust::String &url);
 
-// TODO: images
+void Image(const rust::Vec<uint8_t>& user_texture_bytes,
+           const ARRAY_FLOAT(2)& size, const ARRAY_FLOAT(2)& uv0,
+           const ARRAY_FLOAT(2)& uv1, const ARRAY_FLOAT(4)& tint_col,
+           const ARRAY_FLOAT(4)& border_col);
+void ImageFromFile(const std::string& filename, const ARRAY_FLOAT(2)& size,
+                   const ARRAY_FLOAT(2)& uv0, const ARRAY_FLOAT(2)& uv1,
+                   const ARRAY_FLOAT(4)& tint_col,
+                   const ARRAY_FLOAT(4)& border_col);
+bool ImageButton(const std::string& str_id, const rust::Vec<uint8_t>& texture,
+                 const ARRAY_FLOAT(2)& size, const ARRAY_FLOAT(2)& uv0,
+                 const ARRAY_FLOAT(2)& uv1, const ARRAY_FLOAT(4)& bg_col,
+                 const ARRAY_FLOAT(4)& tint_col);
+bool ImageButtonFromFile(const std::string& str_id, const std::string& filename,
+                         const ARRAY_FLOAT(2)& size, const ARRAY_FLOAT(2)& uv0,
+                         const ARRAY_FLOAT(2)& uv1, const ARRAY_FLOAT(4)& bg_col,
+                         const ARRAY_FLOAT(4)& tint_col);
 
-bool BeginCombo(rust::String &label, rust::String &preview_value, int flags);
+bool BeginCombo(const std::string& label, const std::string& preview_value,
+                int flags);
 void EndCombo();
-bool Combo(rust::String &label, int &current_item, rust::Vec<rust::String> &items,
-           int items_count, int height_in_items);
+bool Combo(const std::string& label, int& current_item,
+           const rust::Vec<rust::String>& items, int height_in_items);
 
-bool DragFloat(rust::String &label, float &v, float v_speed, float v_min,
-               float v_max, rust::String &format, float power);
-bool DragFloat2(rust::String &label, RIMGUI_VEC &v, float v_speed, float v_min,
-                float v_max, rust::String &format, float power);
-bool DragFloat3(rust::String &label, RIMGUI_VEC &v, float v_speed, float v_min,
-                float v_max, rust::String &format, float power);
-bool DragFloat4(rust::String &label, RIMGUI_VEC &v, float v_speed, float v_min,
-                float v_max, rust::String &format, float power);
-bool DragFloatRange2(rust::String &label, float &v_current_min,
-                     float &v_current_max, float v_speed, float v_min,
-                     float v_max, rust::String &format_min,
-                     rust::String &format_max, float power);
-bool DragInt(rust::String &label, int &v, float v_speed, int v_min, int v_max,
-             rust::String &format);
-bool DragInt2(rust::String &label, RIMGUI_VEC &v, float v_speed, int v_min,
-              int v_max, rust::String &format);
-bool DragInt3(rust::String &label, RIMGUI_VEC &v, float v_speed, int v_min,
-              int v_max, rust::String &format);
-bool DragInt4(rust::String &label, RIMGUI_VEC &v, float v_speed, int v_min,
-              int v_max, rust::String &format);
-bool DragIntRange2(rust::String &label, int &v_current_min, int &v_current_max,
-                   float v_speed, int v_min, int v_max,
-                   rust::String &format_min, rust::String &format_max);
+bool DragFloat(const std::string& label, float& v, float v_speed, float v_min,
+               float v_max, const std::string& format, int flags);
+bool DragFloat2(const std::string& label, ARRAY_FLOAT(2)& v, float v_speed,
+                float v_min, float v_max, const std::string& format, int flags);
+bool DragFloat3(const std::string& label, ARRAY_FLOAT(3)& v, float v_speed,
+                float v_min, float v_max, const std::string& format, int flags);
+bool DragFloat4(const std::string& label, ARRAY_FLOAT(4)& v, float v_speed,
+                float v_min, float v_max, const std::string& format, int flags);
+bool DragFloatRange2(const std::string& label, float& v_current_min,
+                     float& v_current_max, float v_speed, float v_min,
+                     float v_max, const std::string& format_min,
+                     const std::string& format_max, int flags);
+bool DragInt(const std::string& label, int& v, float v_speed, int v_min,
+             int v_max, const std::string& format, int flags);
+bool DragInt2(const std::string& label, ARRAY_INT(2)& v, float v_speed,
+              int v_min, int v_max, const std::string& format, int flags);
+bool DragInt3(const std::string& label, ARRAY_INT(3)& v, float v_speed,
+              int v_min, int v_max, const std::string& format, int flags);
+bool DragInt4(const std::string& label, ARRAY_INT(4)& v, float v_speed,
+              int v_min, int v_max, const std::string& format, int flags);
+bool DragIntRange2(const std::string& label, int& v_current_min,
+                   int& v_current_max, float v_speed, int v_min, int v_max,
+                   const std::string& format_min, const std::string& format_max,
+                   int flags);
 
-bool SliderFloat(rust::String &label, float &v, float v_min, float v_max,
-                 rust::String &format, float power);
-bool SliderFloat2(rust::String &label, RIMGUI_VEC &v, float v_min, float v_max,
-                  rust::String &format, float power);
-bool SliderFloat3(rust::String &label, RIMGUI_VEC &v, float v_min, float v_max,
-                  rust::String &format, float power);
-bool SliderFloat4(rust::String &label, RIMGUI_VEC &v, float v_min, float v_max,
-                  rust::String &format, float power);
-bool SliderAngle(rust::String &label, float &v_rad, float v_degrees_min,
-                 float v_degrees_max, rust::String &format);
-bool SliderInt(rust::String &label, int &v, int v_min, int v_max,
-               rust::String &format);
-bool SliderInt2(rust::String &label, RIMGUI_VEC &v, int v_min, int v_max,
-                rust::String &format);
-bool SliderInt3(rust::String &label, RIMGUI_VEC &v, int v_min, int v_max,
-                rust::String &format);
-bool SliderInt4(rust::String &label, RIMGUI_VEC &v, int v_min, int v_max,
-                rust::String &format);
+bool SliderFloat(const std::string& label, float& v, float v_min, float v_max,
+                 const std::string& format, int flags);
+bool SliderFloat2(const std::string& label, ARRAY_FLOAT(2)& v, float v_min,
+                  float v_max, const std::string& format, int flags);
+bool SliderFloat3(const std::string& label, ARRAY_FLOAT(3)& v, float v_min,
+                  float v_max, const std::string& format, int flags);
+bool SliderFloat4(const std::string& label, ARRAY_FLOAT(4)& v, float v_min,
+                  float v_max, const std::string& format, int flags);
+bool SliderAngle(const std::string& label, float& v_rad, float v_degrees_min,
+                 float v_degrees_max, const std::string& format, int flags);
+bool SliderInt(const std::string& label, int& v, int v_min, int v_max,
+               const std::string& format, int flags);
+bool SliderInt2(const std::string& label, ARRAY_INT(2)& v, int v_min, int v_max,
+                const std::string& format, int flags);
+bool SliderInt3(const std::string& label, ARRAY_INT(3)& v, int v_min, int v_max,
+                const std::string& format, int flags);
+bool SliderInt4(const std::string& label, ARRAY_INT(4)& v, int v_min, int v_max,
+                const std::string& format, int flags);
 
-bool InputText(rust::String &label, rust::String &buf, int flags);
-bool InputTextWithHint(rust::String &label, rust::String &hint,
-                       rust::String &buf, int flags);
-bool InputFloat(rust::String &label, float &v, float step, float step_fast,
-                rust::String &format, int flags);
-bool InputFloat2(rust::String &label, RIMGUI_VEC &v, rust::String &format,
-                 int flags);
-bool InputFloat3(rust::String &label, RIMGUI_VEC &v, rust::String &format,
-                 int flags);
-bool InputFloat4(rust::String &label, RIMGUI_VEC &v, rust::String &format,
-                 int flags);
-bool InputInt(rust::String &label, int &v, int step, int step_fast, int flags);
-bool InputInt2(rust::String &label, RIMGUI_VEC &v, int flags);
-bool InputInt3(rust::String &label, RIMGUI_VEC &v, int flags);
-bool InputInt4(rust::String &label, RIMGUI_VEC &v, int flags);
-bool InputDouble(rust::String &label, double &v, double step, double step_fast,
-                 rust::String &format, int flags);
+bool InputText(const std::string& label, rust::Vec<uint8_t>& buf, int flags);
+bool InputTextWithHint(const std::string& label, const std::string& hint,
+                       rust::Vec<uint8_t>& buf, int flags);
+bool InputFloat(const std::string& label, float& v, float step, float step_fast,
+                const std::string& format, int flags);
+bool InputFloat2(const std::string& label, ARRAY_FLOAT(2)& v,
+                 const std::string& format, int flags);
+bool InputFloat3(const std::string& label, ARRAY_FLOAT(3)& v,
+                 const std::string& format, int flags);
+bool InputFloat4(const std::string& label, ARRAY_FLOAT(4)& v,
+                 const std::string& format, int flags);
+bool InputInt(const std::string& label, int& v, int step, int step_fast,
+              int flags);
+bool InputInt2(const std::string& label, ARRAY_INT(2)& v, int flags);
+bool InputInt3(const std::string& label, ARRAY_INT(3)& v, int flags);
+bool InputInt4(const std::string& label, ARRAY_INT(4)& v, int flags);
+bool InputDouble(const std::string& label, double& v, double step,
+                 double step_fast, const std::string& format, int flags);
 
-bool ColorEdit3(rust::String &label, RIMGUI_VEC &col, int flags);
-bool ColorEdit4(rust::String &label, RIMGUI_VEC &col, int flags);
-bool ColorPicker3(rust::String &label, RIMGUI_VEC &col, int flags);
-bool ColorPicker4(rust::String &label, RIMGUI_VEC &col, int flags,
-                  RIMGUI_VEC &ref_col);
-bool ColorButton(rust::String &desc_id, RIMGUI_VEC &col, int flags,
-                 RIMGUI_VEC &size);
+bool ColorEdit3(const std::string& label, ARRAY_FLOAT(3)& col, int flags);
+bool ColorEdit4(const std::string& label, ARRAY_FLOAT(4)& col, int flags);
+bool ColorPicker3(const std::string& label, ARRAY_FLOAT(3)& col, int flags);
+bool ColorPicker4(const std::string& label, ARRAY_FLOAT(4)& col, int flags,
+                  const ARRAY_FLOAT(4)& ref_col);
+bool ColorButton(const std::string& desc_id, ARRAY_FLOAT(4)& col, int flags,
+                 const ARRAY_FLOAT(2)& size);
 void SetColorEditOptions(int flags);
 
-bool TreeNode(rust::String &label);
-bool TreeNodeWithId(rust::String &str_id, rust::String &fmt, ...);
-bool TreeNodeEx(rust::String &label, int flags);
-bool TreeNodeExWithId(rust::String &str_id, int flags, rust::String &fmt, ...);
-void TreePush(rust::String &str_id);
+bool TreeNode(const std::string& label);
+bool TreeNodeWithId(const std::string& str_id, const std::string& fmt);
+bool TreeNodeEx(const std::string& label, int flags);
+bool TreeNodeExWithId(const std::string& str_id, int flags,
+                      const std::string& fmt);
+void TreePush(const std::string& str_id);
 void TreePop();
 float GetTreeNodeToLabelSpacing();
-bool CollapsingHeader(rust::String &label, int flags);
+bool CollapsingHeader(const std::string& label, int flags);
 void SetNextItemOpen(bool is_open, int cond);
 void SetNextItemStorageID(uint32_t id);
 
-bool Selectable(rust::String &label, bool selected, int flags,
-                RIMGUI_VEC &size);
+bool Selectable(const std::string& label, bool selected, int flags,
+                const ARRAY_FLOAT(2)& size);
 
 // TODO: multi-selectable
 
-bool BeginListBox(rust::String &label, RIMGUI_VEC &size);
+bool BeginListBox(const std::string& label, const ARRAY_FLOAT(2)& size);
 void EndListBox();
-bool ListBox(rust::String &label, int &current_item,
-             rust::Vec<rust::String> &items, int height_in_items);
+bool ListBox(const std::string& label, int& current_item,
+             const rust::Vec<rust::String>& items, int height_in_items);
 
 bool BeginMainMenuBar();
 void EndMainMenuBar();
 bool BeginMenuBar();
 void EndMenuBar();
-bool BeginMenu(rust::String &label, bool enabled);
+bool BeginMenu(const std::string& label, bool enabled);
 void EndMenu();
-bool MenuItem(rust::String &label, rust::String &shortcut, bool selected,
-              bool enabled);
+bool MenuItem(const std::string& label, const std::string& shortcut,
+              bool selected, bool enabled);
 
-bool BeginTooltip();
+void BeginTooltip();
 void EndTooltip();
-void SetTooltip(rust::String &text, ...);
+void SetTooltip(const std::string& text);
 
 bool BeginItemTooltip();
-void SetItemTooltip(rust::String &text, ...);
+void SetItemTooltip(const std::string& text);
 
-bool BeginPopup(rust::String &str_id, int flags);
-bool BeginPopupModal(rust::String &name, bool &p_open, int flags);
+bool BeginPopup(const std::string& str_id, int flags);
+bool BeginPopupModal(const std::string& name, bool& p_open, int flags);
 void EndPopup();
 
-void OpenPopup(rust::String &str_id, int flags);
-void OpenPopupOnItemClick(rust::String &str_id, int mouse_button);
+void OpenPopup(const std::string& str_id, int flags);
+void OpenPopupOnItemClick(const std::string& str_id, int popup_flags);
 void CloseCurrentPopup();
 
-bool BeginPopupContextItem(rust::String &str_id, int mouse_button);
-bool BeginPopupContextWindow(rust::String &str_id, int mouse_button,
-                             bool also_over_items);
-bool BeginPopupContextVoid(rust::String &str_id, int mouse_button);
+bool BeginPopupContextItem(const std::string& str_id, int mouse_button);
+bool BeginPopupContextWindow(const std::string& str_id, int mouse_button);
+bool BeginPopupContextVoid(const std::string& str_id, int mouse_button);
 
-bool IsPopupOpen(rust::String &str_id, int flags);
+bool IsPopupOpen(const std::string& str_id, int flags);
+
+bool BeginTable(const std::string& str_id, int column, int flags,
+                const ARRAY_FLOAT(2)& outer_size, float inner_width);
+void EndTable();
+void TableNextRow(int row_flags, float min_row_height);
+bool TableNextColumn();
+bool TableSetColumnIndex(int column_n);
+
+void TableSetupColumn(const std::string& label, int flags,
+                      float init_width_or_weight, uint32_t user_id);
+void TableSetupScrollFreeze(int cols, int rows);
+void TableHeadersRow();
+void TableHeader(const std::string& label);
+
+int TableGetColumnCount();
+int TableGetColumnIndex();
+int TableGetRowIndex();
+rust::String TableGetColumnName(int column_n);
+int TableGetColumnFlags(int column_n);
+void TableSetColumnEnabled(int column_n, bool enabled);
+void TableSetBgColor(int target, uint32_t color, int column_n);
+
+void Columns(int count, const std::string& id, bool border);
+void NextColumn();
+int GetColumnIndex();
+float GetColumnWidth(int column_index);
+void SetColumnWidth(int column_index, float width);
+float GetColumnOffset(int column_index);
+void SetColumnOffset(int column_index, float offset_x);
+int GetColumnsCount();
+
+bool BeginTabBar(const std::string& str_id, int flags);
+void EndTabBar();
+bool BeginTabItem(const std::string& label, bool& p_open, int flags);
+void EndTabItem();
+bool TabItemButton(const std::string& label, int flags);
+void SetTabItemClosed(const std::string& tab_or_docked_window_label);
+
+// TODO: Drag and drop
+
+void BeginDisabled(bool disabled);
+void EndDisabled();
+
+void PushClipRect(const ARRAY_FLOAT(2)& clip_rect_min,
+                  const ARRAY_FLOAT(2)& clip_rect_max,
+                  bool intersect_with_current_clip_rect);
+void PopClipRect();
+
+void SetItemDefaultFocus();
+void SetKeyboardFocusHere(int offset);
+
+bool IsItemHovered(int flags);
+bool IsItemActive();
+bool IsItemFocused();
+bool IsItemClicked(int mouse_button);
+bool IsItemVisible();
+bool IsItemEdited();
+bool IsItemActivated();
+bool IsItemDeactivated();
+bool IsItemDeactivatedAfterEdit();
+bool IsItemToggledOpen();
+bool IsAnyItemHovered();
+bool IsAnyItemActive();
+bool IsAnyItemFocused();
+ARRAY_FLOAT(2) GetItemRectMin();
+ARRAY_FLOAT(2) GetItemRectMax();
+ARRAY_FLOAT(2) GetItemRectSize();
+void SetItemAllowOverlap();
+
+bool IsRectVisible(const ARRAY_FLOAT(2)& rect_min_or_size,
+                   const ARRAY_FLOAT(2)& rect_max_or_none);
+double GetTime();
+int GetFrameCount();
+rust::String GetStyleColorName(int idx);
+bool BeginChildFrame(uint32_t id, const ARRAY_FLOAT(2)& size, int flags);
+void EndChildFrame();
+
+ARRAY_FLOAT(2) CalcTextSize(const std::string& text, const std::string& text_end,
+                          bool hide_text_after_double_hash, float wrap_width);
+
+ARRAY_FLOAT(4) ColorConvertU32ToFloat4(uint32_t in);
+uint32_t ColorConvertFloat4ToU32(const ARRAY_FLOAT(4)& in);
+ARRAY_FLOAT(4) ColorConvertRGBToHSV(const ARRAY_FLOAT(4)& rgb);
+ARRAY_FLOAT(4) ColorConvertHSVToRGB(const ARRAY_FLOAT(4)& hsv);
+
+bool IsKeyDown(int user_key_index);
+bool IsKeyPressed(int user_key_index, bool repeat);
+bool IsKeyReleased(int user_key_index);
+int GetKeyPressedAmount(int key_index, float repeat_delay, float rate);
+rust::String GetKeyName(int key_index);
+void SetNextFrameWantCaptureKeyboard(int value);
+
+bool IsMouseDown(int button);
+bool IsMouseClicked(int button, bool repeat);
+bool IsMouseReleased(int button);
+bool IsMouseDoubleClicked(int button);
+int GetMouseClickedCount(int button);
+bool IsMouseHoveringRect(const ARRAY_FLOAT(2)& r_min, const ARRAY_FLOAT(2)& r_max,
+                         bool clip);
+bool IsMousePosValid(const ARRAY_FLOAT(2)& pos);
+bool IsAnyMouseDown();
+ARRAY_FLOAT(2) GetMousePos();
+ARRAY_FLOAT(2) GetMousePosOnOpeningCurrentPopup();
+bool IsMouseDragging(int button, float lock_threshold);
+ARRAY_FLOAT(2) GetMouseDragDelta(int button, float lock_threshold);
+void ResetMouseDragDelta(int button);
+int GetMouseCursor();
+void SetMouseCursor(int cursor_type);
+void SetNextFrameWantCaptureMouse(bool want_capture_mouse);
+
+rust::String GetClipboardText();
+void SetClipboardText(const std::string& text);
+
 }  // namespace rimgui

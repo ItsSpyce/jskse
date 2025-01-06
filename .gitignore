@@ -7,3 +7,6 @@ build
 /vcpkg_installed
 **/unused
 /Cargo.lock
+
+# Third party libraries not allowed in the source
+extern/Ultralight

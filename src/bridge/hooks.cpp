@@ -1,5 +1,6 @@
 #include "bridge/hooks.h"
 
+#include "graphics.h"
 #include "bridge/strings.rs.h"
 #include "hook_builder.h"
 #include "jskse_core.h"
@@ -22,26 +23,10 @@ void hooks::install() {
 void hooks::D3DInitHook::thunk() {
   rlog::info("Initializing DirectX..."sv);
   func();
-  const auto renderer = RE::BSGraphics::Renderer::GetSingleton();
-  if (!renderer) {
-    rlog::error("Renderer not found."sv);
-    return;
+  const auto device = graphics::get_device();
+  if (!device) {
+    rlog::error("Failed to get device"sv);
   }
-  const auto swap_chain = renderer->data.renderWindows[0].swapChain;
-  if (!swap_chain) {
-    rlog::error("Failed to fetch swap-chain. Aborting");
-    return;
-  }
-  REX::W32::DXGI_SWAP_CHAIN_DESC desc{};
-  if (FAILED(swap_chain->GetDesc(&desc))) {
-    rlog::error("Failed to get swap-chain description."sv);
-    return;
-  }
-
-  /*const auto device = renderer->data.forwarder;
-  const auto context = renderer->data.context;*/
-  rlog::info("Registering DirectX with cbindgen...");
-  rlog::info("DirectX initialized");
 }
 
 LRESULT hooks::WndProcHook::thunk(HWND hwnd, UINT msg, WPARAM wparam,

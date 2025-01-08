@@ -7,16 +7,24 @@
 #include "graphics.h"
 #include "stb_image.h"
 
-static ImVec2 to_imvec2(const ARRAY_FLOAT(2) &vec) {
+static ImVec2 to_imvec2(const ARRAY_FLOAT(2) & vec) {
   return ImVec2{vec[0], vec[1]};
+}
+
+static ImVec2 to_imvec2(ARRAY_FLOAT(2) * vec) {
+  return ImVec2{(*vec)[0], (*vec)[1]};
 }
 
 static ARRAY_FLOAT(2) from_imvec2(const ImVec2 vec) {
   return ARRAY_FLOAT(2){vec.x, vec.y};
 }
 
-static ImVec4 to_imvec4(const ARRAY_FLOAT(4) &vec) {
+static ImVec4 to_imvec4(const ARRAY_FLOAT(4) & vec) {
   return ImVec4{vec[0], vec[1], vec[2], vec[3]};
+}
+
+static ImVec4 to_imvec4(ARRAY_FLOAT(4) * vec) {
+  return ImVec4{(*vec)[0], (*vec)[1], (*vec)[2], (*vec)[3]};
 }
 
 static ARRAY_FLOAT(4) from_imvec4(const ImVec4 vec) {
@@ -111,7 +119,7 @@ bool rimgui::Begin(const std::string &name, bool *open, int flags) {
 
 void rimgui::End() { ImGui::End(); }
 
-bool rimgui::BeginChild(const std::string &id, const ARRAY_FLOAT(2) &size,
+bool rimgui::BeginChild(const std::string &id, const ARRAY_FLOAT(2) & size,
                         const int child_flags, const int window_flags) {
   return ImGui::BeginChild(id.c_str(), to_imvec2(size), child_flags,
                            window_flags);
@@ -143,21 +151,21 @@ float rimgui::GetWindowWidth() { return ImGui::GetWindowWidth(); }
 
 float rimgui::GetWindowHeight() { return ImGui::GetWindowHeight(); }
 
-void rimgui::SetNextWindowPos(const ARRAY_FLOAT(2) &size, int cond,
-                              const ARRAY_FLOAT(2) &pivot) {
+void rimgui::SetNextWindowPos(const ARRAY_FLOAT(2) & size, int cond,
+                              const ARRAY_FLOAT(2) & pivot) {
   ImGui::SetNextWindowPos(to_imvec2(size), cond, to_imvec2(pivot));
 }
 
-void rimgui::SetNextWindowSize(const ARRAY_FLOAT(2) &size, int cond) {
+void rimgui::SetNextWindowSize(const ARRAY_FLOAT(2) & size, int cond) {
   ImGui::SetNextWindowSize(to_imvec2(size), cond);
 }
 
-void rimgui::SetNextWindowSizeConstraints(const ARRAY_FLOAT(2) &size_min,
-                                          const ARRAY_FLOAT(2) &size_max) {
+void rimgui::SetNextWindowSizeConstraints(const ARRAY_FLOAT(2) & size_min,
+                                          const ARRAY_FLOAT(2) & size_max) {
   ImGui::SetNextWindowSizeConstraints(to_imvec2(size_min), to_imvec2(size_max));
 }
 
-void rimgui::SetNextWindowContentSize(const ARRAY_FLOAT(2) &size) {
+void rimgui::SetNextWindowContentSize(const ARRAY_FLOAT(2) & size) {
   ImGui::SetNextWindowContentSize(to_imvec2(size));
 }
 
@@ -167,7 +175,7 @@ void rimgui::SetNextWindowCollapsed(bool collapsed, int cond) {
 
 void rimgui::SetNextWindowFocus() { ImGui::SetNextWindowFocus(); }
 
-void rimgui::SetNextWindowScroll(const ARRAY_FLOAT(2) &scroll) {
+void rimgui::SetNextWindowScroll(const ARRAY_FLOAT(2) & scroll) {
   ImGui::SetNextWindowScroll(to_imvec2(scroll));
 }
 
@@ -175,11 +183,11 @@ void rimgui::SetNextWindowBgAlpha(float alpha) {
   ImGui::SetNextWindowBgAlpha(alpha);
 }
 
-void rimgui::SetWindowPos(const ARRAY_FLOAT(2) &pos, int cond) {
+void rimgui::SetWindowPos(const ARRAY_FLOAT(2) & pos, int cond) {
   ImGui::SetWindowPos(to_imvec2(pos), cond);
 }
 
-void rimgui::SetWindowSize(const ARRAY_FLOAT(2) &size, int cond) {
+void rimgui::SetWindowSize(const ARRAY_FLOAT(2) & size, int cond) {
   ImGui::SetWindowSize(to_imvec2(size), cond);
 }
 
@@ -194,12 +202,12 @@ void rimgui::SetWindowFontScale(float scale) {
 }
 
 void rimgui::SetWindowPosByName(const std::string &name,
-                                const ARRAY_FLOAT(2) &pos, int cond) {
+                                const ARRAY_FLOAT(2) & pos, int cond) {
   ImGui::SetWindowPos(name.c_str(), to_imvec2(pos), cond);
 }
 
 void rimgui::SetWindowSizeByName(const std::string &name,
-                                 const ARRAY_FLOAT(2) &size, int cond) {
+                                 const ARRAY_FLOAT(2) & size, int cond) {
   ImGui::SetWindowSize(name.c_str(), to_imvec2(size), cond);
 }
 
@@ -242,13 +250,13 @@ void rimgui::SetScrollFromPosY(float local_y, float center_y_ratio) {
 
 void rimgui::PopFont() { ImGui::PopFont(); }
 
-void rimgui::PushStyleColor(int idx, const ARRAY_FLOAT(4) &col) {
+void rimgui::PushStyleColor(int idx, const ARRAY_FLOAT(4) & col) {
   ImGui::PushStyleColor(idx, to_imvec4(col));
 }
 
 void rimgui::PopStyleColor(int count) { ImGui::PopStyleColor(count); }
 
-void rimgui::PushStyleVar(int index, const ARRAY_FLOAT(2) &val) {
+void rimgui::PushStyleVar(int index, const ARRAY_FLOAT(2) & val) {
   if (val.size() == 1) {
     ImGui::PushStyleVar(index, val[0]);
   } else {
@@ -288,7 +296,7 @@ ARRAY_FLOAT(2) rimgui::GetFontTextUvWhitePixel() {
   return from_imvec2(ImGui::GetFontTexUvWhitePixel());
 }
 
-uint32_t rimgui::GetColorU32(const ARRAY_FLOAT(4) &col) {
+uint32_t rimgui::GetColorU32(const ARRAY_FLOAT(4) & col) {
   return ImGui::GetColorU32(to_imvec4(col));
 }
 
@@ -304,7 +312,7 @@ ARRAY_FLOAT(2) rimgui::GetCursorScreenPos() {
   return from_imvec2(ImGui::GetCursorScreenPos());
 }
 
-void rimgui::SetCursorScreenPos(const ARRAY_FLOAT(2) &pos) {
+void rimgui::SetCursorScreenPos(const ARRAY_FLOAT(2) & pos) {
   ImGui::SetCursorScreenPos(to_imvec2(pos));
 }
 
@@ -320,7 +328,7 @@ float rimgui::GetCursorPosX() { return ImGui::GetCursorPosX(); }
 
 float rimgui::GetCursorPosY() { return ImGui::GetCursorPosY(); }
 
-void rimgui::SetCursorPos(const ARRAY_FLOAT(2) &pos) {
+void rimgui::SetCursorPos(const ARRAY_FLOAT(2) & pos) {
   ImGui::SetCursorPos(to_imvec2(pos));
 }
 
@@ -342,7 +350,9 @@ void rimgui::NewLine() { ImGui::NewLine(); }
 
 void rimgui::Spacing() { ImGui::Spacing(); }
 
-void rimgui::Dummy(const ARRAY_FLOAT(2) &size) { ImGui::Dummy(to_imvec2(size)); }
+void rimgui::Dummy(const ARRAY_FLOAT(2) & size) {
+  ImGui::Dummy(to_imvec2(size));
+}
 
 void rimgui::Indent(float indent_w) { ImGui::Indent(indent_w); }
 
@@ -390,7 +400,7 @@ void rimgui::Text(const std::string &text,
   ImGui::Text(fmt);
 }
 
-void rimgui::TextColored(const ARRAY_FLOAT(4) &col, const std::string &text,
+void rimgui::TextColored(const ARRAY_FLOAT(4) & col, const std::string &text,
                          const std::vector<std::string> &args) {
   const char *fmt = text.c_str();
   // TODO:
@@ -426,7 +436,7 @@ void rimgui::SeparatorText(const std::string &text) {
   ImGui::Text(text.c_str());
 }
 
-bool rimgui::Button(const std::string &label, const ARRAY_FLOAT(2) &size) {
+bool rimgui::Button(const std::string &label, const ARRAY_FLOAT(2) & size) {
   return ImGui::Button(label.c_str(), to_imvec2(size));
 }
 
@@ -435,7 +445,7 @@ bool rimgui::SmallButton(const std::string &label) {
 }
 
 bool rimgui::InvisibleButton(const std::string &str_id,
-                             const ARRAY_FLOAT(2) &size, int flags) {
+                             const ARRAY_FLOAT(2) & size, int flags) {
   return ImGui::InvisibleButton(str_id.c_str(), to_imvec2(size), flags);
 }
 
@@ -443,24 +453,24 @@ bool rimgui::ArrowButton(const std::string &str_id, int dir) {
   return ImGui::ArrowButton(str_id.c_str(), dir);
 }
 
-bool rimgui::Checkbox(const std::string &label, bool &v) {
-  return ImGui::Checkbox(label.c_str(), &v);
+bool rimgui::Checkbox(const std::string &label, bool *v) {
+  return ImGui::Checkbox(label.c_str(), v);
 }
 
-bool rimgui::CheckboxFlags(const std::string &label, int &flags,
+bool rimgui::CheckboxFlags(const std::string &label, int *flags,
                            int flags_value) {
-  return ImGui::CheckboxFlags(label.c_str(), &flags, flags_value);
+  return ImGui::CheckboxFlags(label.c_str(), flags, flags_value);
 }
 
 bool rimgui::RadioButtonBool(const std::string &label, bool active) {
   return ImGui::RadioButton(label.c_str(), active);
 }
 
-bool rimgui::RadioButton(const std::string &label, int &v, int v_button) {
-  return ImGui::RadioButton(label.c_str(), &v, v_button);
+bool rimgui::RadioButton(const std::string &label, int *v, int v_button) {
+  return ImGui::RadioButton(label.c_str(), v, v_button);
 }
 
-void rimgui::ProgressBar(float fraction, const ARRAY_FLOAT(2) &size_arg,
+void rimgui::ProgressBar(float fraction, const ARRAY_FLOAT(2) & size_arg,
                          const std::string &overlay) {
   ImGui::ProgressBar(fraction, to_imvec2(size_arg), overlay.c_str());
 }
@@ -468,9 +478,9 @@ void rimgui::ProgressBar(float fraction, const ARRAY_FLOAT(2) &size_arg,
 void rimgui::Bullet() { ImGui::Bullet(); }
 
 void rimgui::Image(const rust::Vec<uint8_t> &user_texture_bytes,
-                   const ARRAY_FLOAT(2) &size, const ARRAY_FLOAT(2) &uv0,
-                   const ARRAY_FLOAT(2) &uv1, const ARRAY_FLOAT(4) &tint_col,
-                   const ARRAY_FLOAT(4) &border_col) {
+                   const ARRAY_FLOAT(2) & size, const ARRAY_FLOAT(2) & uv0,
+                   const ARRAY_FLOAT(2) & uv1, const ARRAY_FLOAT(4) & tint_col,
+                   const ARRAY_FLOAT(4) & border_col) {
   ID3D11ShaderResourceView *tex = NULL;
   int height = 0, width = 0;
   if (load_texture_from_bytes(user_texture_bytes.data(),
@@ -482,10 +492,11 @@ void rimgui::Image(const rust::Vec<uint8_t> &user_texture_bytes,
 }
 
 void rimgui::ImageFromFile(const std::string &filename,
-                           const ARRAY_FLOAT(2) &size, const ARRAY_FLOAT(2) &uv0,
-                           const ARRAY_FLOAT(2) &uv1,
-                           const ARRAY_FLOAT(4) &tint_col,
-                           const ARRAY_FLOAT(4) &border_col) {
+                           const ARRAY_FLOAT(2) & size,
+                           const ARRAY_FLOAT(2) & uv0,
+                           const ARRAY_FLOAT(2) & uv1,
+                           const ARRAY_FLOAT(4) & tint_col,
+                           const ARRAY_FLOAT(4) & border_col) {
   ID3D11ShaderResourceView *tex = NULL;
   int height = 0, width = 0;
   if (load_texture_from_file(filename.c_str(), &tex, &width, &height)) {
@@ -496,9 +507,10 @@ void rimgui::ImageFromFile(const std::string &filename,
 
 bool rimgui::ImageButton(const std::string &str_id,
                          const rust::Vec<uint8_t> &texture,
-                         const ARRAY_FLOAT(2) &size, const ARRAY_FLOAT(2) &uv0,
-                         const ARRAY_FLOAT(2) &uv1, const ARRAY_FLOAT(4) &bg_col,
-                         const ARRAY_FLOAT(4) &tint_col) {
+                         const ARRAY_FLOAT(2) & size,
+                         const ARRAY_FLOAT(2) & uv0, const ARRAY_FLOAT(2) & uv1,
+                         const ARRAY_FLOAT(4) & bg_col,
+                         const ARRAY_FLOAT(4) & tint_col) {
   ID3D11ShaderResourceView *tex = NULL;
   int height = 0, width = 0;
   if (load_texture_from_bytes(texture.data(), texture.size(), &tex, &width,
@@ -510,10 +522,13 @@ bool rimgui::ImageButton(const std::string &str_id,
   return false;
 }
 
-bool rimgui::ImageButtonFromFile(
-    const std::string &str_id, const std::string &filename,
-    const ARRAY_FLOAT(2) &size, const ARRAY_FLOAT(2) &uv0, const ARRAY_FLOAT(2) &uv1,
-    const ARRAY_FLOAT(4) &bg_col, const ARRAY_FLOAT(4) &tint_col) {
+bool rimgui::ImageButtonFromFile(const std::string &str_id,
+                                 const std::string &filename,
+                                 const ARRAY_FLOAT(2) & size,
+                                 const ARRAY_FLOAT(2) & uv0,
+                                 const ARRAY_FLOAT(2) & uv1,
+                                 const ARRAY_FLOAT(4) & bg_col,
+                                 const ARRAY_FLOAT(4) & tint_col) {
   ID3D11ShaderResourceView *tex = NULL;
   int height = 0, width = 0;
   if (load_texture_from_file(filename.c_str(), &tex, &width, &height)) {
@@ -524,232 +539,240 @@ bool rimgui::ImageButtonFromFile(
   return false;
 }
 
-bool rimgui::BeginCombo(const std::string &label, const std::string &preview_value,
-                        int flags) {
+bool rimgui::BeginCombo(const std::string &label,
+                        const std::string &preview_value, int flags) {
   return ImGui::BeginCombo(label.c_str(), preview_value.c_str(), flags);
 }
 
 void rimgui::EndCombo() { ImGui::EndCombo(); }
 
-bool rimgui::Combo(const std::string &label, int &current_item,
+bool rimgui::Combo(const std::string &label, int *current_item,
                    const rust::Vec<rust::String> &items, int height_in_items) {
   std::vector<const char *> c_items;
   for (auto item : items) {
     c_items.push_back(item.c_str());
   }
-  return ImGui::Combo(label.c_str(), &current_item, c_items.data(),
-                      items.size(), height_in_items);
+  return ImGui::Combo(label.c_str(), current_item, c_items.data(), items.size(),
+                      height_in_items);
 }
 
-bool rimgui::DragFloat(const std::string &label, float &v, float v_speed,
-                       float v_min, float v_max, const std::string& format,
+bool rimgui::DragFloat(const std::string &label, float *v, float v_speed,
+                       float v_min, float v_max, const std::string &format,
                        int flags) {
-  return ImGui::DragFloat(label.c_str(), &v, v_speed, v_min, v_max,
+  return ImGui::DragFloat(label.c_str(), v, v_speed, v_min, v_max,
                           format.c_str(), flags);
 }
 
-bool rimgui::DragFloat2(const std::string &label, ARRAY_FLOAT(2) &v,
+bool rimgui::DragFloat2(const std::string &label, ARRAY_FLOAT(2) * v,
                         float v_speed, float v_min, float v_max,
-                        const std::string& format, int flags) {
-  return ImGui::DragFloat2(label.c_str(), v.data(), v_speed, v_min, v_max,
+                        const std::string &format, int flags) {
+  return ImGui::DragFloat2(label.c_str(), v->data(), v_speed, v_min, v_max,
                            format.c_str(), flags);
 }
 
-bool rimgui::DragFloat3(const std::string &label, ARRAY_FLOAT(3) &v,
+bool rimgui::DragFloat3(const std::string &label, ARRAY_FLOAT(3) * v,
                         float v_speed, float v_min, float v_max,
-                        const std::string& format, int flags) {
-  return ImGui::DragFloat3(label.c_str(), v.data(), v_speed, v_min, v_max,
+                        const std::string &format, int flags) {
+  return ImGui::DragFloat3(label.c_str(), v->data(), v_speed, v_min, v_max,
                            format.c_str(), flags);
 }
 
-bool rimgui::DragFloat4(const std::string &label, ARRAY_FLOAT(4) &v,
+bool rimgui::DragFloat4(const std::string &label, ARRAY_FLOAT(4) * v,
                         float v_speed, float v_min, float v_max,
-                        const std::string& format, int flags) {
-  return ImGui::DragFloat4(label.c_str(), v.data(), v_speed, v_min, v_max,
+                        const std::string &format, int flags) {
+  return ImGui::DragFloat4(label.c_str(), v->data(), v_speed, v_min, v_max,
                            format.c_str(), flags);
 }
 
-bool rimgui::DragFloatRange2(const std::string &label, float &v_current_min,
-                             float &v_current_max, float v_speed, float v_min,
-                             float v_max, const std::string& format_min,
-                             const std::string& format_max, int flags) {
-  return ImGui::DragFloatRange2(label.c_str(), &v_current_min, &v_current_max,
+bool rimgui::DragFloatRange2(const std::string &label, float *v_current_min,
+                             float *v_current_max, float v_speed, float v_min,
+                             float v_max, const std::string &format_min,
+                             const std::string &format_max, int flags) {
+  return ImGui::DragFloatRange2(label.c_str(), v_current_min, v_current_max,
                                 v_speed, v_min, v_max, format_min.c_str(),
                                 format_max.c_str(), flags);
 }
 
-bool rimgui::DragInt(const std::string &label, int &v, float v_speed, int v_min,
-                     int v_max, const std::string& format, int flags) {
-  return ImGui::DragInt(label.c_str(), &v, v_speed, v_min, v_max,
-                        format.c_str(), flags);
+bool rimgui::DragInt(const std::string &label, int *v, float v_speed, int v_min,
+                     int v_max, const std::string &format, int flags) {
+  return ImGui::DragInt(label.c_str(), v, v_speed, v_min, v_max, format.c_str(),
+                        flags);
 }
 
-bool rimgui::DragInt2(const std::string &label, ARRAY_INT(2) &v, float v_speed,
-                      int v_min, int v_max, const std::string& format, int flags) {
-  return ImGui::DragInt2(label.c_str(), v.data(), v_speed, v_min, v_max,
+bool rimgui::DragInt2(const std::string &label, ARRAY_INT(2) * v, float v_speed,
+                      int v_min, int v_max, const std::string &format,
+                      int flags) {
+  return ImGui::DragInt2(label.c_str(), v->data(), v_speed, v_min, v_max,
                          format.c_str(), flags);
 }
 
-bool rimgui::DragInt3(const std::string &label, ARRAY_INT(3) &v, float v_speed,
-                      int v_min, int v_max, const std::string& format, int flags) {
-  return ImGui::DragInt3(label.c_str(), v.data(), v_speed, v_min, v_max,
+bool rimgui::DragInt3(const std::string &label, ARRAY_INT(3) * v, float v_speed,
+                      int v_min, int v_max, const std::string &format,
+                      int flags) {
+  return ImGui::DragInt3(label.c_str(), v->data(), v_speed, v_min, v_max,
                          format.c_str(), flags);
 }
 
-bool rimgui::DragInt4(const std::string &label, ARRAY_INT(4) &v, float v_speed,
-                      int v_min, int v_max, const std::string& format, int flags) {
-  return ImGui::DragInt4(label.c_str(), v.data(), v_speed, v_min, v_max,
+bool rimgui::DragInt4(const std::string &label, ARRAY_INT(4) * v, float v_speed,
+                      int v_min, int v_max, const std::string &format,
+                      int flags) {
+  return ImGui::DragInt4(label.c_str(), v->data(), v_speed, v_min, v_max,
                          format.c_str(), flags);
 }
 
-bool rimgui::DragIntRange2(const std::string &label, int &v_current_min,
-                           int &v_current_max, float v_speed, int v_min,
-                           int v_max, const std::string& format_min,
-                           const std::string& format_max, int flags) {
-  return ImGui::DragIntRange2(label.c_str(), &v_current_min, &v_current_max,
+bool rimgui::DragIntRange2(const std::string &label, int *v_current_min,
+                           int *v_current_max, float v_speed, int v_min,
+                           int v_max, const std::string &format_min,
+                           const std::string &format_max, int flags) {
+  return ImGui::DragIntRange2(label.c_str(), v_current_min, v_current_max,
                               v_speed, v_min, v_max, format_min.c_str(),
                               format_max.c_str(), flags);
 }
 
-bool rimgui::SliderFloat(const std::string &label, float &v, float v_min,
-                         float v_max, const std::string& format, int flags) {
-  return ImGui::SliderFloat(label.c_str(), &v, v_min, v_max, format.c_str(),
+bool rimgui::SliderFloat(const std::string &label, float *v, float v_min,
+                         float v_max, const std::string &format, int flags) {
+  return ImGui::SliderFloat(label.c_str(), v, v_min, v_max, format.c_str(),
                             flags);
 }
 
-bool rimgui::SliderFloat2(const std::string &label, ARRAY_FLOAT(2) &v,
-                          float v_min, float v_max, const std::string& format,
+bool rimgui::SliderFloat2(const std::string &label, ARRAY_FLOAT(2) * v,
+                          float v_min, float v_max, const std::string &format,
                           int flags) {
-  return ImGui::SliderFloat2(label.c_str(), v.data(), v_min, v_max,
+  return ImGui::SliderFloat2(label.c_str(), v->data(), v_min, v_max,
                              format.c_str(), flags);
 }
 
-bool rimgui::SliderFloat3(const std::string &label, ARRAY_FLOAT(3) &v,
-                          float v_min, float v_max, const std::string& format,
+bool rimgui::SliderFloat3(const std::string &label, ARRAY_FLOAT(3) * v,
+                          float v_min, float v_max, const std::string &format,
                           int flags) {
-  return ImGui::SliderFloat3(label.c_str(), v.data(), v_min, v_max,
+  return ImGui::SliderFloat3(label.c_str(), v->data(), v_min, v_max,
                              format.c_str(), flags);
 }
 
-bool rimgui::SliderFloat4(const std::string &label, ARRAY_FLOAT(4) &v,
-                          float v_min, float v_max, const std::string& format,
+bool rimgui::SliderFloat4(const std::string &label, ARRAY_FLOAT(4) * v,
+                          float v_min, float v_max, const std::string &format,
                           int flags) {
-  return ImGui::SliderFloat4(label.c_str(), v.data(), v_min, v_max,
+  return ImGui::SliderFloat4(label.c_str(), v->data(), v_min, v_max,
                              format.c_str(), flags);
 }
 
-bool rimgui::SliderAngle(const std::string &label, float &v_rad,
+bool rimgui::SliderAngle(const std::string &label, float *v_rad,
                          float v_degrees_min, float v_degrees_max,
-                         const std::string& format, int flags) {
-  return ImGui::SliderAngle(label.c_str(), &v_rad, v_degrees_min, v_degrees_max,
+                         const std::string &format, int flags) {
+  return ImGui::SliderAngle(label.c_str(), v_rad, v_degrees_min, v_degrees_max,
                             format.c_str(), flags);
 }
 
-bool rimgui::SliderInt(const std::string &label, int &v, int v_min, int v_max,
-                       const std::string& format, int flags) {
-  return ImGui::SliderInt(label.c_str(), &v, v_min, v_max, format.c_str(),
+bool rimgui::SliderInt(const std::string &label, int *v, int v_min, int v_max,
+                       const std::string &format, int flags) {
+  return ImGui::SliderInt(label.c_str(), v, v_min, v_max, format.c_str(),
                           flags);
 }
 
-bool rimgui::SliderInt2(const std::string &label, ARRAY_INT(2) &v, int v_min,
-                        int v_max, const std::string& format, int flags) {
-  return ImGui::SliderInt2(label.c_str(), v.data(), v_min, v_max,
+bool rimgui::SliderInt2(const std::string &label, ARRAY_INT(2) * v, int v_min,
+                        int v_max, const std::string &format, int flags) {
+  return ImGui::SliderInt2(label.c_str(), v->data(), v_min, v_max,
                            format.c_str(), flags);
 }
 
-bool rimgui::SliderInt3(const std::string &label, ARRAY_INT(3) &v, int v_min,
-                        int v_max, const std::string& format, int flags) {
-  return ImGui::SliderInt3(label.c_str(), v.data(), v_min, v_max,
+bool rimgui::SliderInt3(const std::string &label, ARRAY_INT(3) * v, int v_min,
+                        int v_max, const std::string &format, int flags) {
+  return ImGui::SliderInt3(label.c_str(), v->data(), v_min, v_max,
                            format.c_str(), flags);
 }
 
-bool rimgui::SliderInt4(const std::string &label, ARRAY_INT(4) &v, int v_min,
-                        int v_max, const std::string& format, int flags) {
-  return ImGui::SliderInt4(label.c_str(), v.data(), v_min, v_max,
+bool rimgui::SliderInt4(const std::string &label, ARRAY_INT(4) * v, int v_min,
+                        int v_max, const std::string &format, int flags) {
+  return ImGui::SliderInt4(label.c_str(), v->data(), v_min, v_max,
                            format.c_str(), flags);
 }
 
-bool rimgui::InputText(const std::string &label, rust::Vec<uint8_t> &buf, int flags) {
-  return ImGui::InputText(label.c_str(), reinterpret_cast<char*>(buf.data()), buf.size(), flags);
+bool rimgui::InputText(const std::string &label, rust::Vec<uint8_t> &buf,
+                       int flags) {
+  return ImGui::InputText(label.c_str(), reinterpret_cast<char *>(buf.data()),
+                          buf.size(), flags);
 }
 
-bool rimgui::InputTextWithHint(const std::string &label, const std::string &hint,
-                               rust::Vec<uint8_t> &buf, int flags) {
-  return ImGui::InputTextWithHint(label.c_str(), hint.c_str(), reinterpret_cast<char*>(buf.data()),
+bool rimgui::InputTextWithHint(const std::string &label,
+                               const std::string &hint, rust::Vec<uint8_t> &buf,
+                               int flags) {
+  return ImGui::InputTextWithHint(label.c_str(), hint.c_str(),
+                                  reinterpret_cast<char *>(buf.data()),
                                   buf.size(), flags);
 }
 
-bool rimgui::InputFloat(const std::string &label, float &v, float step,
-                        float step_fast, const std::string& format, int flags) {
-  return ImGui::InputFloat(label.c_str(), &v, step, step_fast, format.c_str(),
+bool rimgui::InputFloat(const std::string &label, float *v, float step,
+                        float step_fast, const std::string &format, int flags) {
+  return ImGui::InputFloat(label.c_str(), v, step, step_fast, format.c_str(),
                            flags);
 }
 
-bool rimgui::InputFloat2(const std::string &label, ARRAY_FLOAT(2) &v,
-                         const std::string& format, int flags) {
-  return ImGui::InputFloat2(label.c_str(), v.data(), format.c_str(), flags);
+bool rimgui::InputFloat2(const std::string &label, ARRAY_FLOAT(2) * v,
+                         const std::string &format, int flags) {
+  return ImGui::InputFloat2(label.c_str(), v->data(), format.c_str(), flags);
 }
 
-bool rimgui::InputFloat3(const std::string &label, ARRAY_FLOAT(3) &v,
-                         const std::string& format, int flags) {
-  return ImGui::InputFloat3(label.c_str(), v.data(), format.c_str(), flags);
+bool rimgui::InputFloat3(const std::string &label, ARRAY_FLOAT(3) * v,
+                         const std::string &format, int flags) {
+  return ImGui::InputFloat3(label.c_str(), v->data(), format.c_str(), flags);
 }
 
-bool rimgui::InputFloat4(const std::string &label, ARRAY_FLOAT(4) &v,
-                         const std::string& format, int flags) {
-  return ImGui::InputFloat4(label.c_str(), v.data(), format.c_str(), flags);
+bool rimgui::InputFloat4(const std::string &label, ARRAY_FLOAT(4) * v,
+                         const std::string &format, int flags) {
+  return ImGui::InputFloat4(label.c_str(), v->data(), format.c_str(), flags);
 }
 
-bool rimgui::InputInt(const std::string &label, int &v, int step, int step_fast,
+bool rimgui::InputInt(const std::string &label, int *v, int step, int step_fast,
                       int flags) {
-  return ImGui::InputInt(label.c_str(), &v, step, step_fast, flags);
+  return ImGui::InputInt(label.c_str(), v, step, step_fast, flags);
 }
 
-bool rimgui::InputInt2(const std::string &label, ARRAY_INT(2) &v, int flags) {
-  return ImGui::InputInt2(label.c_str(), v.data(), flags);
+bool rimgui::InputInt2(const std::string &label, ARRAY_INT(2) * v, int flags) {
+  return ImGui::InputInt2(label.c_str(), v->data(), flags);
 }
 
-bool rimgui::InputInt3(const std::string &label, ARRAY_INT(3) &v, int flags) {
-  return ImGui::InputInt3(label.c_str(), v.data(), flags);
+bool rimgui::InputInt3(const std::string &label, ARRAY_INT(3) * v, int flags) {
+  return ImGui::InputInt3(label.c_str(), v->data(), flags);
 }
 
-bool rimgui::InputInt4(const std::string &label, ARRAY_INT(4) &v, int flags) {
-  return ImGui::InputInt4(label.c_str(), v.data(), flags);
+bool rimgui::InputInt4(const std::string &label, ARRAY_INT(4) * v, int flags) {
+  return ImGui::InputInt4(label.c_str(), v->data(), flags);
 }
 
-bool rimgui::InputDouble(const std::string &label, double &v, double step,
-                         double step_fast, const std::string& format, int flags) {
-  return ImGui::InputDouble(label.c_str(), &v, step, step_fast, format.c_str(),
+bool rimgui::InputDouble(const std::string &label, double *v, double step,
+                         double step_fast, const std::string &format,
+                         int flags) {
+  return ImGui::InputDouble(label.c_str(), v, step, step_fast, format.c_str(),
                             flags);
 }
 
-bool rimgui::ColorEdit3(const std::string &label, ARRAY_FLOAT(3) &col,
+bool rimgui::ColorEdit3(const std::string &label, ARRAY_FLOAT(3) * col,
                         int flags) {
-  return ImGui::ColorEdit3(label.c_str(), col.data(), flags);
+  return ImGui::ColorEdit3(label.c_str(), col->data(), flags);
 }
 
-bool rimgui::ColorEdit4(const std::string &label, ARRAY_FLOAT(4) &col,
+bool rimgui::ColorEdit4(const std::string &label, ARRAY_FLOAT(4) * col,
                         int flags) {
-  return ImGui::ColorEdit4(label.c_str(), col.data(), flags);
+  return ImGui::ColorEdit4(label.c_str(), col->data(), flags);
 }
 
-bool rimgui::ColorPicker3(const std::string &label, ARRAY_FLOAT(3) &col,
+bool rimgui::ColorPicker3(const std::string &label, ARRAY_FLOAT(3) * col,
                           int flags) {
-  return ImGui::ColorPicker3(label.c_str(), col.data(), flags);
+  return ImGui::ColorPicker3(label.c_str(), col->data(), flags);
 }
 
-bool rimgui::ColorPicker4(const std::string &label, ARRAY_FLOAT(4) &col,
-                          int flags, const ARRAY_FLOAT(4) &ref_col) {
-  return ImGui::ColorPicker4(label.c_str(), col.data(), flags, ref_col.data());
+bool rimgui::ColorPicker4(const std::string &label, ARRAY_FLOAT(4) * col,
+                          int flags, const ARRAY_FLOAT(4) & ref_col) {
+  return ImGui::ColorPicker4(label.c_str(), col->data(), flags, ref_col.data());
 }
 
-bool rimgui::ColorButton(const std::string &desc_id, ARRAY_FLOAT(4) &col,
-                         int flags, const ARRAY_FLOAT(2) &size) {
+bool rimgui::ColorButton(const std::string &desc_id, ARRAY_FLOAT(4) * col,
+                         int flags, const ARRAY_FLOAT(2) & size) {
   return ImGui::ColorButton(desc_id.c_str(), to_imvec4(col), flags,
                             to_imvec2(size));
 }
 
-void rimgui::Columns(int count, const std::string& id, bool border) {
+void rimgui::Columns(int count, const std::string &id, bool border) {
   ImGui::Columns(count, id.c_str(), border);
 }
 
@@ -781,8 +804,8 @@ bool rimgui::BeginTabBar(const std::string &str_id, int flags) {
 
 void rimgui::EndTabBar() { ImGui::EndTabBar(); }
 
-bool rimgui::BeginTabItem(const std::string &label, bool &p_open, int flags) {
-  return ImGui::BeginTabItem(label.c_str(), &p_open, flags);
+bool rimgui::BeginTabItem(const std::string &label, bool *p_open, int flags) {
+  return ImGui::BeginTabItem(label.c_str(), p_open, flags);
 }
 
 void rimgui::EndTabItem() { ImGui::EndTabItem(); }
@@ -799,8 +822,8 @@ void rimgui::BeginDisabled(bool disabled) { ImGui::BeginDisabled(disabled); }
 
 void rimgui::EndDisabled() { ImGui::EndDisabled(); }
 
-void rimgui::PushClipRect(const ARRAY_FLOAT(2) &clip_rect_min,
-                          const ARRAY_FLOAT(2) &clip_rect_max,
+void rimgui::PushClipRect(const ARRAY_FLOAT(2) & clip_rect_min,
+                          const ARRAY_FLOAT(2) & clip_rect_max,
                           bool intersect_with_current_clip_rect) {
   ImGui::PushClipRect(to_imvec2(clip_rect_min), to_imvec2(clip_rect_max),
                       intersect_with_current_clip_rect);
@@ -858,8 +881,8 @@ ARRAY_FLOAT(2) rimgui::GetItemRectSize() {
 
 void rimgui::SetItemAllowOverlap() { ImGui::SetItemAllowOverlap(); }
 
-bool rimgui::IsRectVisible(const ARRAY_FLOAT(2) &rect_min_or_size,
-                           const ARRAY_FLOAT(2) &rect_max_or_none) {
+bool rimgui::IsRectVisible(const ARRAY_FLOAT(2) & rect_min_or_size,
+                           const ARRAY_FLOAT(2) & rect_max_or_none) {
   return ImGui::IsRectVisible(to_imvec2(rect_min_or_size),
                               to_imvec2(rect_max_or_none));
 }
@@ -872,16 +895,16 @@ rust::String rimgui::GetStyleColorName(int idx) {
   return rust::String{ImGui::GetStyleColorName(idx)};
 }
 
-bool rimgui::BeginChildFrame(uint32_t id, const ARRAY_FLOAT(2) &size, int flags) {
+bool rimgui::BeginChildFrame(uint32_t id, const ARRAY_FLOAT(2) & size,
+                             int flags) {
   return ImGui::BeginChildFrame(id, to_imvec2(size), flags);
 }
 
 void rimgui::EndChildFrame() { ImGui::EndChildFrame(); }
 
-ARRAY_FLOAT(2) rimgui::CalcTextSize(const std::string &text,
-                                  const std::string& text_end,
-                                  bool hide_text_after_double_hash,
-                                  float wrap_width) {
+ARRAY_FLOAT(2)
+rimgui::CalcTextSize(const std::string &text, const std::string &text_end,
+                     bool hide_text_after_double_hash, float wrap_width) {
   return from_imvec2(ImGui::CalcTextSize(
       text.c_str(), text_end.c_str(), hide_text_after_double_hash, wrap_width));
 }
@@ -890,17 +913,17 @@ ARRAY_FLOAT(4) rimgui::ColorConvertU32ToFloat4(uint32_t in) {
   return from_imvec4(ImGui::ColorConvertU32ToFloat4(in));
 }
 
-uint32_t rimgui::ColorConvertFloat4ToU32(const ARRAY_FLOAT(4) &in) {
+uint32_t rimgui::ColorConvertFloat4ToU32(const ARRAY_FLOAT(4) & in) {
   return ImGui::ColorConvertFloat4ToU32(to_imvec4(in));
 }
 
-ARRAY_FLOAT(4) rimgui::ColorConvertRGBToHSV(const ARRAY_FLOAT(4) &rgb) {
+ARRAY_FLOAT(4) rimgui::ColorConvertRGBToHSV(const ARRAY_FLOAT(4) & rgb) {
   float h, s, v;
   ImGui::ColorConvertRGBtoHSV(rgb[0], rgb[1], rgb[2], h, s, v);
   return ARRAY_FLOAT(4){h, s, v, 1.0f};
 }
 
-ARRAY_FLOAT(4) rimgui::ColorConvertHSVToRGB(const ARRAY_FLOAT(4) &hsv) {
+ARRAY_FLOAT(4) rimgui::ColorConvertHSVToRGB(const ARRAY_FLOAT(4) & hsv) {
   float r, g, b;
   ImGui::ColorConvertHSVtoRGB(hsv[0], hsv[1], hsv[2], r, g, b);
   return ARRAY_FLOAT(4){r, g, b, 1.0f};
@@ -949,8 +972,8 @@ int rimgui::GetMouseClickedCount(int button) {
   return ImGui::GetMouseClickedCount(button);
 }
 
-bool rimgui::IsMouseHoveringRect(const ARRAY_FLOAT(2) &r_min,
-                                 const ARRAY_FLOAT(2) &r_max, bool clip) {
+bool rimgui::IsMouseHoveringRect(const ARRAY_FLOAT(2) & r_min,
+                                 const ARRAY_FLOAT(2) & r_max, bool clip) {
   return ImGui::IsMouseHoveringRect(to_imvec2(r_min), to_imvec2(r_max), clip);
 }
 
@@ -976,27 +999,33 @@ bool rimgui::CollapsingHeader(const std::string &label, int flags) {
   return ImGui::CollapsingHeader(label.c_str(), flags);
 }
 
+bool rimgui::CollapsingHeaderCtrl(const std::string &label, bool *p_open,
+                                  int flags) {
+  return ImGui::CollapsingHeader(label.c_str(), p_open, flags);
+}
+
 void rimgui::SetNextItemOpen(bool is_open, int cond) {
   ImGui::SetNextItemOpen(is_open, cond);
 }
 
-bool rimgui::Selectable(const std::string &label, bool selected, int flags,
-                        const ARRAY_FLOAT(2) &size) {
+bool rimgui::Selectable(const std::string &label, bool *selected, int flags,
+                        const ARRAY_FLOAT(2) & size) {
   return ImGui::Selectable(label.c_str(), selected, flags, to_imvec2(size));
 }
 
-bool rimgui::ListBox(const std::string &label, int &current_item,
+bool rimgui::ListBox(const std::string &label, int *current_item,
                      const rust::Vec<rust::String> &items,
                      int height_in_items) {
   std::vector<const char *> c_items;
   for (auto item : items) {
     c_items.push_back(item.c_str());
   }
-  return ImGui::ListBox(label.c_str(), &current_item, c_items.data(),
+  return ImGui::ListBox(label.c_str(), current_item, c_items.data(),
                         c_items.size(), height_in_items);
 }
 
-bool rimgui::BeginListBox(const std::string &label, const ARRAY_FLOAT(2) &size) {
+bool rimgui::BeginListBox(const std::string &label,
+                          const ARRAY_FLOAT(2) & size) {
   return ImGui::BeginListBox(label.c_str(), to_imvec2(size));
 }
 
@@ -1016,7 +1045,7 @@ bool rimgui::BeginMenu(const std::string &label, bool enabled) {
 
 void rimgui::EndMenu() { ImGui::EndMenu(); }
 
-bool rimgui::MenuItem(const std::string &label, const std::string& shortcut,
+bool rimgui::MenuItem(const std::string &label, const std::string &shortcut,
                       bool selected, bool enabled) {
   return ImGui::MenuItem(label.c_str(), shortcut.c_str(), selected, enabled);
 }
@@ -1034,8 +1063,8 @@ bool rimgui::BeginPopup(const std::string &str_id, int flags) {
   return ImGui::BeginPopup(str_id.c_str(), flags);
 }
 
-bool rimgui::BeginPopupModal(const std::string &name, bool &p_open, int flags) {
-  return ImGui::BeginPopupModal(name.c_str(), &p_open, flags);
+bool rimgui::BeginPopupModal(const std::string &name, bool *p_open, int flags) {
+  return ImGui::BeginPopupModal(name.c_str(), p_open, flags);
 }
 
 void rimgui::EndPopup() { ImGui::EndPopup(); }
@@ -1070,7 +1099,7 @@ bool rimgui::IsPopupOpen(const std::string &str_id, int flags) {
 }
 
 bool rimgui::BeginTable(const std::string &str_id, int columns_count, int flags,
-                        const ARRAY_FLOAT(2) &outer_size, float inner_width) {
+                        const ARRAY_FLOAT(2) & outer_size, float inner_width) {
   return ImGui::BeginTable(str_id.c_str(), columns_count, flags,
                            to_imvec2(outer_size), inner_width);
 }

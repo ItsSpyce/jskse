@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bridge/rimgui.rs.h>
+#include <imgui.h>
 
 #define ARRAY_FLOAT(_SIZE) std::array<float, _SIZE>
 #define ARRAY_INT(_SIZE) std::array<int, _SIZE>
@@ -8,7 +8,8 @@
 namespace rimgui {
 
 /// Custom ImGui Builder functions/structs
-
+using ImGuiTableSortSpecs = ImGuiTableSortSpecs;
+using TableColumnSortSpecs = ImGuiTableColumnSortSpecs;
 // Built-in ImGui functions
 
 bool Begin(const std::string& name, bool* open, int flags);
@@ -24,24 +25,24 @@ ARRAY_FLOAT(2) GetWindowPos();
 ARRAY_FLOAT(2) GetWindowSize();
 float GetWindowWidth();
 float GetWindowHeight();
-void SetNextWindowPos(const ARRAY_FLOAT(2)& size, int cond,
-                      const ARRAY_FLOAT(2)& pivot);
-void SetNextWindowSize(const ARRAY_FLOAT(2)& size, int cond);
-void SetNextWindowSizeConstraints(const ARRAY_FLOAT(2)& size_min,
-                                  const ARRAY_FLOAT(2)& size_max);
-void SetNextWindowContentSize(const ARRAY_FLOAT(2)& size);
+void SetNextWindowPos(const ARRAY_FLOAT(2) & size, int cond,
+                      const ARRAY_FLOAT(2) & pivot);
+void SetNextWindowSize(const ARRAY_FLOAT(2) & size, int cond);
+void SetNextWindowSizeConstraints(const ARRAY_FLOAT(2) & size_min,
+                                  const ARRAY_FLOAT(2) & size_max);
+void SetNextWindowContentSize(const ARRAY_FLOAT(2) & size);
 void SetNextWindowCollapsed(bool collapsed, int cond);
 void SetNextWindowFocus();
-void SetNextWindowScroll(const ARRAY_FLOAT(2)& scroll);
+void SetNextWindowScroll(const ARRAY_FLOAT(2) & scroll);
 void SetNextWindowBgAlpha(float alpha);
-void SetWindowPos(const ARRAY_FLOAT(2)& pos, int cond);
-void SetWindowSize(const ARRAY_FLOAT(2)& size, int cond);
+void SetWindowPos(const ARRAY_FLOAT(2) & pos, int cond);
+void SetWindowSize(const ARRAY_FLOAT(2) & size, int cond);
 void SetWindowCollapsed(bool collapsed, int cond);
 void SetWindowFocus();
 void SetWindowFontScale(float scale);
-void SetWindowPosByName(const std::string& name, const ARRAY_FLOAT(2)& pos,
+void SetWindowPosByName(const std::string& name, const ARRAY_FLOAT(2) & pos,
                         int cond);
-void SetWindowSizeByName(const std::string& name, const ARRAY_FLOAT(2)& size,
+void SetWindowSizeByName(const std::string& name, const ARRAY_FLOAT(2) & size,
                          int cond);
 void SetWindowCollapsedByName(const std::string& name, bool collapsed,
                               int cond);
@@ -59,9 +60,9 @@ void SetScrollFromPosX(float local_x, float center_x_ratio);
 void SetScrollFromPosY(float local_y, float center_y_ratio);
 
 void PopFont();
-void PushStyleColor(int idx, const ARRAY_FLOAT(4)& col);
+void PushStyleColor(int idx, const ARRAY_FLOAT(4) & col);
 void PopStyleColor(int count);
-void PushStyleVar(int index, const ARRAY_FLOAT(2)& val);
+void PushStyleVar(int index, const ARRAY_FLOAT(2) & val);
 void PopStyleVar(int count);
 void PushItemFlag(int option, bool enabled);
 void PopItemFlag();
@@ -76,16 +77,16 @@ void PopTextWrapPos();
 float GetFontSize();
 ARRAY_FLOAT(2) GetFontTextUvWhitePixel();
 uint32_t GetColorU32FromStyle(int idx, float alpha_mul);
-uint32_t GetColorU32(const ARRAY_FLOAT(4)& col);
+uint32_t GetColorU32(const ARRAY_FLOAT(4) & col);
 ARRAY_FLOAT(4) GetStyleColorVec4(int idx);
 
 ARRAY_FLOAT(2) GetCursorScreenPos();
-void SetCursorScreenPos(const ARRAY_FLOAT(2)& pos);
+void SetCursorScreenPos(const ARRAY_FLOAT(2) & pos);
 ARRAY_FLOAT(2) GetContentRegionAvail();
 ARRAY_FLOAT(2) GetCursorPos();
 float GetCursorPosX();
 float GetCursorPosY();
-void SetCursorPos(const ARRAY_FLOAT(2)& pos);
+void SetCursorPos(const ARRAY_FLOAT(2) & pos);
 void SetCursorPosX(float x);
 void SetCursorPosY(float y);
 ARRAY_FLOAT(2) GetCursorStartPos();
@@ -94,7 +95,7 @@ void Separator();
 void SameLine(float offset_from_start_x, float spacing);
 void NewLine();
 void Spacing();
-void Dummy(const ARRAY_FLOAT(2)& size);
+void Dummy(const ARRAY_FLOAT(2) & size);
 void Indent(float indent_w);
 void Unindent(float indent_w);
 void BeginGroup();
@@ -113,7 +114,7 @@ uint32_t GetID(int id);
 
 void TextUnformatted(const std::string& text);
 void Text(const std::string& text, const std::vector<std::string>& args);
-void TextColored(const ARRAY_FLOAT(4)& col, const std::string& text,
+void TextColored(const ARRAY_FLOAT(4) & col, const std::string& text,
                  const std::vector<std::string>& args);
 void TextDisabled(const std::string& text,
                   const std::vector<std::string>& args);
@@ -123,112 +124,113 @@ void LabelText(const std::string& label, const std::string& text,
 void BulletText(const std::string& text, const std::vector<std::string>& args);
 void SeparatorText(const std::string& text);
 
-bool Button(const std::string& label, const ARRAY_FLOAT(2)& size);
+bool Button(const std::string& label, const ARRAY_FLOAT(2) & size);
 bool SmallButton(const std::string& label);
-bool InvisibleButton(const std::string& str_id, const ARRAY_FLOAT(2)& size,
+bool InvisibleButton(const std::string& str_id, const ARRAY_FLOAT(2) & size,
                      int flags);
 bool ArrowButton(const std::string& str_id, int dir);
-bool Checkbox(const std::string& label, bool& v);
-bool CheckboxFlags(const std::string& label, int &flags, int flags_value);
+bool Checkbox(const std::string& label, bool* v);
+bool CheckboxFlags(const std::string& label, int* flags, int flags_value);
 bool RadioButtonBool(const std::string& label, bool active);
-bool RadioButton(const std::string& label, int& v, int v_button);
-void ProgressBar(float fraction, const ARRAY_FLOAT(2)& size_arg,
+bool RadioButton(const std::string& label, int* v, int v_button);
+void ProgressBar(float fraction, const ARRAY_FLOAT(2) & size_arg,
                  const std::string& overlay);
 void Bullet();
 
 void Image(const rust::Vec<uint8_t>& user_texture_bytes,
-           const ARRAY_FLOAT(2)& size, const ARRAY_FLOAT(2)& uv0,
-           const ARRAY_FLOAT(2)& uv1, const ARRAY_FLOAT(4)& tint_col,
-           const ARRAY_FLOAT(4)& border_col);
-void ImageFromFile(const std::string& filename, const ARRAY_FLOAT(2)& size,
-                   const ARRAY_FLOAT(2)& uv0, const ARRAY_FLOAT(2)& uv1,
-                   const ARRAY_FLOAT(4)& tint_col,
-                   const ARRAY_FLOAT(4)& border_col);
+           const ARRAY_FLOAT(2) & size, const ARRAY_FLOAT(2) & uv0,
+           const ARRAY_FLOAT(2) & uv1, const ARRAY_FLOAT(4) & tint_col,
+           const ARRAY_FLOAT(4) & border_col);
+void ImageFromFile(const std::string& filename, const ARRAY_FLOAT(2) & size,
+                   const ARRAY_FLOAT(2) & uv0, const ARRAY_FLOAT(2) & uv1,
+                   const ARRAY_FLOAT(4) & tint_col,
+                   const ARRAY_FLOAT(4) & border_col);
 bool ImageButton(const std::string& str_id, const rust::Vec<uint8_t>& texture,
-                 const ARRAY_FLOAT(2)& size, const ARRAY_FLOAT(2)& uv0,
-                 const ARRAY_FLOAT(2)& uv1, const ARRAY_FLOAT(4)& bg_col,
-                 const ARRAY_FLOAT(4)& tint_col);
+                 const ARRAY_FLOAT(2) & size, const ARRAY_FLOAT(2) & uv0,
+                 const ARRAY_FLOAT(2) & uv1, const ARRAY_FLOAT(4) & bg_col,
+                 const ARRAY_FLOAT(4) & tint_col);
 bool ImageButtonFromFile(const std::string& str_id, const std::string& filename,
-                         const ARRAY_FLOAT(2)& size, const ARRAY_FLOAT(2)& uv0,
-                         const ARRAY_FLOAT(2)& uv1, const ARRAY_FLOAT(4)& bg_col,
-                         const ARRAY_FLOAT(4)& tint_col);
+                         const ARRAY_FLOAT(2) & size,
+                         const ARRAY_FLOAT(2) & uv0, const ARRAY_FLOAT(2) & uv1,
+                         const ARRAY_FLOAT(4) & bg_col,
+                         const ARRAY_FLOAT(4) & tint_col);
 
 bool BeginCombo(const std::string& label, const std::string& preview_value,
                 int flags);
 void EndCombo();
-bool Combo(const std::string& label, int& current_item,
+bool Combo(const std::string& label, int* current_item,
            const rust::Vec<rust::String>& items, int height_in_items);
 
-bool DragFloat(const std::string& label, float& v, float v_speed, float v_min,
+bool DragFloat(const std::string& label, float* v, float v_speed, float v_min,
                float v_max, const std::string& format, int flags);
-bool DragFloat2(const std::string& label, ARRAY_FLOAT(2)& v, float v_speed,
+bool DragFloat2(const std::string& label, ARRAY_FLOAT(2)* v, float v_speed,
                 float v_min, float v_max, const std::string& format, int flags);
-bool DragFloat3(const std::string& label, ARRAY_FLOAT(3)& v, float v_speed,
+bool DragFloat3(const std::string& label, ARRAY_FLOAT(3)* v, float v_speed,
                 float v_min, float v_max, const std::string& format, int flags);
-bool DragFloat4(const std::string& label, ARRAY_FLOAT(4)& v, float v_speed,
+bool DragFloat4(const std::string& label, ARRAY_FLOAT(4)* v, float v_speed,
                 float v_min, float v_max, const std::string& format, int flags);
-bool DragFloatRange2(const std::string& label, float& v_current_min,
-                     float& v_current_max, float v_speed, float v_min,
+bool DragFloatRange2(const std::string& label, float* v_current_min,
+                     float* v_current_max, float v_speed, float v_min,
                      float v_max, const std::string& format_min,
                      const std::string& format_max, int flags);
-bool DragInt(const std::string& label, int& v, float v_speed, int v_min,
+bool DragInt(const std::string& label, int* v, float v_speed, int v_min,
              int v_max, const std::string& format, int flags);
-bool DragInt2(const std::string& label, ARRAY_INT(2)& v, float v_speed,
+bool DragInt2(const std::string& label, ARRAY_INT(2) * v, float v_speed,
               int v_min, int v_max, const std::string& format, int flags);
-bool DragInt3(const std::string& label, ARRAY_INT(3)& v, float v_speed,
+bool DragInt3(const std::string& label, ARRAY_INT(3) * v, float v_speed,
               int v_min, int v_max, const std::string& format, int flags);
-bool DragInt4(const std::string& label, ARRAY_INT(4)& v, float v_speed,
+bool DragInt4(const std::string& label, ARRAY_INT(4) * v, float v_speed,
               int v_min, int v_max, const std::string& format, int flags);
-bool DragIntRange2(const std::string& label, int& v_current_min,
-                   int& v_current_max, float v_speed, int v_min, int v_max,
+bool DragIntRange2(const std::string& label, int* v_current_min,
+                   int* v_current_max, float v_speed, int v_min, int v_max,
                    const std::string& format_min, const std::string& format_max,
                    int flags);
 
-bool SliderFloat(const std::string& label, float& v, float v_min, float v_max,
+bool SliderFloat(const std::string& label, float* v, float v_min, float v_max,
                  const std::string& format, int flags);
-bool SliderFloat2(const std::string& label, ARRAY_FLOAT(2)& v, float v_min,
+bool SliderFloat2(const std::string& label, ARRAY_FLOAT(2) * v, float v_min,
                   float v_max, const std::string& format, int flags);
-bool SliderFloat3(const std::string& label, ARRAY_FLOAT(3)& v, float v_min,
+bool SliderFloat3(const std::string& label, ARRAY_FLOAT(3) * v, float v_min,
                   float v_max, const std::string& format, int flags);
-bool SliderFloat4(const std::string& label, ARRAY_FLOAT(4)& v, float v_min,
+bool SliderFloat4(const std::string& label, ARRAY_FLOAT(4) * v, float v_min,
                   float v_max, const std::string& format, int flags);
-bool SliderAngle(const std::string& label, float& v_rad, float v_degrees_min,
+bool SliderAngle(const std::string& label, float* v_rad, float v_degrees_min,
                  float v_degrees_max, const std::string& format, int flags);
-bool SliderInt(const std::string& label, int& v, int v_min, int v_max,
+bool SliderInt(const std::string& label, int* v, int v_min, int v_max,
                const std::string& format, int flags);
-bool SliderInt2(const std::string& label, ARRAY_INT(2)& v, int v_min, int v_max,
-                const std::string& format, int flags);
-bool SliderInt3(const std::string& label, ARRAY_INT(3)& v, int v_min, int v_max,
-                const std::string& format, int flags);
-bool SliderInt4(const std::string& label, ARRAY_INT(4)& v, int v_min, int v_max,
-                const std::string& format, int flags);
+bool SliderInt2(const std::string& label, ARRAY_INT(2) * v, int v_min,
+                int v_max, const std::string& format, int flags);
+bool SliderInt3(const std::string& label, ARRAY_INT(3) * v, int v_min,
+                int v_max, const std::string& format, int flags);
+bool SliderInt4(const std::string& label, ARRAY_INT(4) * v, int v_min,
+                int v_max, const std::string& format, int flags);
 
 bool InputText(const std::string& label, rust::Vec<uint8_t>& buf, int flags);
 bool InputTextWithHint(const std::string& label, const std::string& hint,
                        rust::Vec<uint8_t>& buf, int flags);
-bool InputFloat(const std::string& label, float& v, float step, float step_fast,
+bool InputFloat(const std::string& label, float* v, float step, float step_fast,
                 const std::string& format, int flags);
-bool InputFloat2(const std::string& label, ARRAY_FLOAT(2)& v,
+bool InputFloat2(const std::string& label, ARRAY_FLOAT(2) * v,
                  const std::string& format, int flags);
-bool InputFloat3(const std::string& label, ARRAY_FLOAT(3)& v,
+bool InputFloat3(const std::string& label, ARRAY_FLOAT(3) * v,
                  const std::string& format, int flags);
-bool InputFloat4(const std::string& label, ARRAY_FLOAT(4)& v,
+bool InputFloat4(const std::string& label, ARRAY_FLOAT(4) * v,
                  const std::string& format, int flags);
-bool InputInt(const std::string& label, int& v, int step, int step_fast,
+bool InputInt(const std::string& label, int* v, int step, int step_fast,
               int flags);
-bool InputInt2(const std::string& label, ARRAY_INT(2)& v, int flags);
-bool InputInt3(const std::string& label, ARRAY_INT(3)& v, int flags);
-bool InputInt4(const std::string& label, ARRAY_INT(4)& v, int flags);
-bool InputDouble(const std::string& label, double& v, double step,
+bool InputInt2(const std::string& label, ARRAY_INT(2) * v, int flags);
+bool InputInt3(const std::string& label, ARRAY_INT(3) * v, int flags);
+bool InputInt4(const std::string& label, ARRAY_INT(4) * v, int flags);
+bool InputDouble(const std::string& label, double* v, double step,
                  double step_fast, const std::string& format, int flags);
 
-bool ColorEdit3(const std::string& label, ARRAY_FLOAT(3)& col, int flags);
-bool ColorEdit4(const std::string& label, ARRAY_FLOAT(4)& col, int flags);
-bool ColorPicker3(const std::string& label, ARRAY_FLOAT(3)& col, int flags);
-bool ColorPicker4(const std::string& label, ARRAY_FLOAT(4)& col, int flags,
-                  const ARRAY_FLOAT(4)& ref_col);
-bool ColorButton(const std::string& desc_id, ARRAY_FLOAT(4)& col, int flags,
-                 const ARRAY_FLOAT(2)& size);
+bool ColorEdit3(const std::string& label, ARRAY_FLOAT(3) * col, int flags);
+bool ColorEdit4(const std::string& label, ARRAY_FLOAT(4) * col, int flags);
+bool ColorPicker3(const std::string& label, ARRAY_FLOAT(3) * col, int flags);
+bool ColorPicker4(const std::string& label, ARRAY_FLOAT(4) * col, int flags,
+                  const ARRAY_FLOAT(4) & ref_col);
+bool ColorButton(const std::string& desc_id, ARRAY_FLOAT(4) * col, int flags,
+                 const ARRAY_FLOAT(2) & size);
 void SetColorEditOptions(int flags);
 
 bool TreeNode(const std::string& label);
@@ -240,17 +242,18 @@ void TreePush(const std::string& str_id);
 void TreePop();
 float GetTreeNodeToLabelSpacing();
 bool CollapsingHeader(const std::string& label, int flags);
+bool CollapsingHeaderCtrl(const std::string& label, bool* p_open, int flags);
 void SetNextItemOpen(bool is_open, int cond);
 void SetNextItemStorageID(uint32_t id);
 
-bool Selectable(const std::string& label, bool selected, int flags,
-                const ARRAY_FLOAT(2)& size);
+bool Selectable(const std::string& label, bool* selected, int flags,
+                const ARRAY_FLOAT(2) & size);
 
 // TODO: multi-selectable
 
-bool BeginListBox(const std::string& label, const ARRAY_FLOAT(2)& size);
+bool BeginListBox(const std::string& label, const ARRAY_FLOAT(2) & size);
 void EndListBox();
-bool ListBox(const std::string& label, int& current_item,
+bool ListBox(const std::string& label, int* current_item,
              const rust::Vec<rust::String>& items, int height_in_items);
 
 bool BeginMainMenuBar();
@@ -270,7 +273,7 @@ bool BeginItemTooltip();
 void SetItemTooltip(const std::string& text);
 
 bool BeginPopup(const std::string& str_id, int flags);
-bool BeginPopupModal(const std::string& name, bool& p_open, int flags);
+bool BeginPopupModal(const std::string& name, bool* p_open, int flags);
 void EndPopup();
 
 void OpenPopup(const std::string& str_id, int flags);
@@ -284,7 +287,7 @@ bool BeginPopupContextVoid(const std::string& str_id, int mouse_button);
 bool IsPopupOpen(const std::string& str_id, int flags);
 
 bool BeginTable(const std::string& str_id, int column, int flags,
-                const ARRAY_FLOAT(2)& outer_size, float inner_width);
+                const ARRAY_FLOAT(2) & outer_size, float inner_width);
 void EndTable();
 void TableNextRow(int row_flags, float min_row_height);
 bool TableNextColumn();
@@ -296,6 +299,7 @@ void TableSetupScrollFreeze(int cols, int rows);
 void TableHeadersRow();
 void TableHeader(const std::string& label);
 
+ImGuiTableSortSpecs *TableGetSortSpecs();
 int TableGetColumnCount();
 int TableGetColumnIndex();
 int TableGetRowIndex();
@@ -315,7 +319,7 @@ int GetColumnsCount();
 
 bool BeginTabBar(const std::string& str_id, int flags);
 void EndTabBar();
-bool BeginTabItem(const std::string& label, bool& p_open, int flags);
+bool BeginTabItem(const std::string& label, bool* p_open, int flags);
 void EndTabItem();
 bool TabItemButton(const std::string& label, int flags);
 void SetTabItemClosed(const std::string& tab_or_docked_window_label);
@@ -325,8 +329,8 @@ void SetTabItemClosed(const std::string& tab_or_docked_window_label);
 void BeginDisabled(bool disabled);
 void EndDisabled();
 
-void PushClipRect(const ARRAY_FLOAT(2)& clip_rect_min,
-                  const ARRAY_FLOAT(2)& clip_rect_max,
+void PushClipRect(const ARRAY_FLOAT(2) & clip_rect_min,
+                  const ARRAY_FLOAT(2) & clip_rect_max,
                   bool intersect_with_current_clip_rect);
 void PopClipRect();
 
@@ -351,21 +355,22 @@ ARRAY_FLOAT(2) GetItemRectMax();
 ARRAY_FLOAT(2) GetItemRectSize();
 void SetItemAllowOverlap();
 
-bool IsRectVisible(const ARRAY_FLOAT(2)& rect_min_or_size,
-                   const ARRAY_FLOAT(2)& rect_max_or_none);
+bool IsRectVisible(const ARRAY_FLOAT(2) & rect_min_or_size,
+                   const ARRAY_FLOAT(2) & rect_max_or_none);
 double GetTime();
 int GetFrameCount();
 rust::String GetStyleColorName(int idx);
-bool BeginChildFrame(uint32_t id, const ARRAY_FLOAT(2)& size, int flags);
+bool BeginChildFrame(uint32_t id, const ARRAY_FLOAT(2) & size, int flags);
 void EndChildFrame();
 
-ARRAY_FLOAT(2) CalcTextSize(const std::string& text, const std::string& text_end,
-                          bool hide_text_after_double_hash, float wrap_width);
+ARRAY_FLOAT(2)
+CalcTextSize(const std::string& text, const std::string& text_end,
+             bool hide_text_after_double_hash, float wrap_width);
 
 ARRAY_FLOAT(4) ColorConvertU32ToFloat4(uint32_t in);
-uint32_t ColorConvertFloat4ToU32(const ARRAY_FLOAT(4)& in);
-ARRAY_FLOAT(4) ColorConvertRGBToHSV(const ARRAY_FLOAT(4)& rgb);
-ARRAY_FLOAT(4) ColorConvertHSVToRGB(const ARRAY_FLOAT(4)& hsv);
+uint32_t ColorConvertFloat4ToU32(const ARRAY_FLOAT(4) & in);
+ARRAY_FLOAT(4) ColorConvertRGBToHSV(const ARRAY_FLOAT(4) & rgb);
+ARRAY_FLOAT(4) ColorConvertHSVToRGB(const ARRAY_FLOAT(4) & hsv);
 
 bool IsKeyDown(int user_key_index);
 bool IsKeyPressed(int user_key_index, bool repeat);
@@ -379,9 +384,9 @@ bool IsMouseClicked(int button, bool repeat);
 bool IsMouseReleased(int button);
 bool IsMouseDoubleClicked(int button);
 int GetMouseClickedCount(int button);
-bool IsMouseHoveringRect(const ARRAY_FLOAT(2)& r_min, const ARRAY_FLOAT(2)& r_max,
-                         bool clip);
-bool IsMousePosValid(const ARRAY_FLOAT(2)& pos);
+bool IsMouseHoveringRect(const ARRAY_FLOAT(2) & r_min,
+                         const ARRAY_FLOAT(2) & r_max, bool clip);
+bool IsMousePosValid(const ARRAY_FLOAT(2) & pos);
 bool IsAnyMouseDown();
 ARRAY_FLOAT(2) GetMousePos();
 ARRAY_FLOAT(2) GetMousePosOnOpeningCurrentPopup();

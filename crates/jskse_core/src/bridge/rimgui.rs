@@ -6,14 +6,35 @@ makes copying and pasting easier so I can just auto-fill most of it. Perhaps thi
 would be better as an auto-generated file but I don't have the time for that.
 */
 
-use cxx::CxxVector;
+use cxx::{type_id, CxxVector, ExternType};
+use imgui_rs::*;
+
+#[derive(Copy, Clone, PartialEq, Eq)]
+pub struct ImGuiTableSortSpecs {
+    pub specs: *mut ImGuiTableColumnSortSpecs,
+    pub specs_count: i32,
+    pub specs_dirty: bool,
+}
+
+unsafe impl ExternType for ImGuiTableSortSpecs {
+    type Id = type_id!("TableSortSpecs");
+    type Kind = cxx::kind::Opaque;
+}
+
+pub struct ImGuiTableColumnSortSpecs {
+    pub column_idx: i32,
+    pub sort_order: i32,
+}
 
 #[cxx::bridge]
-mod imgui_rs {
+pub mod imgui_rs {
+
     #[namespace = "rimgui"]
     unsafe extern "C++" {
         include!("PCH.h");
         include!("bridge/rimgui.h");
+
+        type ImGuiTableSortSpecs;
 
         pub unsafe fn Begin(name: &CxxString, open: *mut bool, flags: i32) -> bool;
         pub fn End();
@@ -119,10 +140,10 @@ mod imgui_rs {
         pub fn SmallButton(label: &CxxString) -> bool;
         pub fn InvisibleButton(str_id: &CxxString, size: &[f32; 2], flags: i32) -> bool;
         pub fn ArrowButton(str_id: &CxxString, dir: i32) -> bool;
-        pub fn Checkbox(label: &CxxString, v: &mut bool) -> bool;
-        pub fn CheckboxFlags(label: &CxxString, flags: &mut i32, flags_value: i32) -> bool;
+        pub unsafe fn Checkbox(label: &CxxString, v: *mut bool) -> bool;
+        pub unsafe fn CheckboxFlags(label: &CxxString, flags: *mut i32, flags_value: i32) -> bool;
         pub fn RadioButtonBool(label: &CxxString, active: bool) -> bool;
-        pub fn RadioButton(label: &CxxString, v: &mut i32, v_button: i32) -> bool;
+        pub unsafe fn RadioButton(label: &CxxString, v: *mut i32, v_button: i32) -> bool;
         pub fn ProgressBar(fraction: f32, size_arg: &[f32; 2], overlay: &CxxString);
         pub fn Bullet();
         pub fn Image(
@@ -162,52 +183,52 @@ mod imgui_rs {
 
         pub fn BeginCombo(label: &CxxString, preview_value: &CxxString, flags: i32) -> bool;
         pub fn EndCombo();
-        pub fn Combo(
+        pub unsafe fn Combo(
             label: &CxxString,
-            current_item: &mut i32,
+            current_item: *mut i32,
             items: &Vec<String>,
             height_in_items: i32,
         ) -> bool;
-        pub fn DragFloat(
+        pub unsafe fn DragFloat(
             label: &CxxString,
-            v: &mut f32,
+            v: *mut f32,
             v_speed: f32,
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragFloat2(
+        pub unsafe fn DragFloat2(
             label: &CxxString,
-            v: &mut [f32; 2],
+            v: *mut [f32; 2],
             v_speed: f32,
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragFloat3(
+        pub unsafe fn DragFloat3(
             label: &CxxString,
-            v: &mut [f32; 3],
+            v: *mut [f32; 3],
             v_speed: f32,
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragFloat4(
+        pub unsafe fn DragFloat4(
             label: &CxxString,
-            v: &mut [f32; 4],
+            v: *mut [f32; 4],
             v_speed: f32,
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragFloatRange2(
+        pub unsafe fn DragFloatRange2(
             label: &CxxString,
-            v_current_min: &mut f32,
-            v_current_max: &mut f32,
+            v_current_min: *mut f32,
+            v_current_max: *mut f32,
             v_speed: f32,
             v_min: f32,
             v_max: f32,
@@ -215,46 +236,46 @@ mod imgui_rs {
             format_max: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragInt(
+        pub unsafe fn DragInt(
             label: &CxxString,
-            v: &mut i32,
+            v: *mut i32,
             v_speed: f32,
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragInt2(
+        pub unsafe fn DragInt2(
             label: &CxxString,
-            v: &mut [i32; 2],
+            v: *mut [i32; 2],
             v_speed: f32,
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragInt3(
+        pub unsafe fn DragInt3(
             label: &CxxString,
-            v: &mut [i32; 3],
+            v: *mut [i32; 3],
             v_speed: f32,
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragInt4(
+        pub unsafe fn DragInt4(
             label: &CxxString,
-            v: &mut [i32; 4],
+            v: *mut [i32; 4],
             v_speed: f32,
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn DragIntRange2(
+        pub unsafe fn DragIntRange2(
             label: &CxxString,
-            v_current_min: &mut i32,
-            v_current_max: &mut i32,
+            v_current_min: *mut i32,
+            v_current_max: *mut i32,
             v_speed: f32,
             v_min: i32,
             v_max: i32,
@@ -262,73 +283,73 @@ mod imgui_rs {
             format_max: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderFloat(
+        pub unsafe fn SliderFloat(
             label: &CxxString,
-            v: &mut f32,
+            v: *mut f32,
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderFloat2(
+        pub unsafe fn SliderFloat2(
             label: &CxxString,
-            v: &mut [f32; 2],
+            v: *mut [f32; 2],
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderFloat3(
+        pub unsafe fn SliderFloat3(
             label: &CxxString,
-            v: &mut [f32; 3],
+            v: *mut [f32; 3],
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderFloat4(
+        pub unsafe fn SliderFloat4(
             label: &CxxString,
-            v: &mut [f32; 4],
+            v: *mut [f32; 4],
             v_min: f32,
             v_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderAngle(
+        pub unsafe fn SliderAngle(
             label: &CxxString,
-            v_rad: &mut f32,
+            v_rad: *mut f32,
             v_degrees_min: f32,
             v_degrees_max: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderInt(
+        pub unsafe fn SliderInt(
             label: &CxxString,
-            v: &mut i32,
+            v: *mut i32,
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderInt2(
+        pub unsafe fn SliderInt2(
             label: &CxxString,
-            v: &mut [i32; 2],
+            v: *mut [i32; 2],
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderInt3(
+        pub unsafe fn SliderInt3(
             label: &CxxString,
-            v: &mut [i32; 3],
+            v: *mut [i32; 3],
             v_min: i32,
             v_max: i32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn SliderInt4(
+        pub unsafe fn SliderInt4(
             label: &CxxString,
-            v: &mut [i32; 4],
+            v: *mut [i32; 4],
             v_min: i32,
             v_max: i32,
             format: &CxxString,
@@ -342,62 +363,62 @@ mod imgui_rs {
             buf: &mut Vec<u8>,
             flags: i32,
         ) -> bool;
-        pub fn InputFloat(
+        pub unsafe fn InputFloat(
             label: &CxxString,
-            v: &mut f32,
+            v: *mut f32,
             step: f32,
             step_fast: f32,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn InputFloat2(
+        pub unsafe fn InputFloat2(
             label: &CxxString,
-            v: &mut [f32; 2],
+            v: *mut [f32; 2],
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn InputFloat3(
+        pub unsafe fn InputFloat3(
             label: &CxxString,
-            v: &mut [f32; 3],
+            v: *mut [f32; 3],
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn InputFloat4(
+        pub unsafe fn InputFloat4(
             label: &CxxString,
-            v: &mut [f32; 4],
+            v: *mut [f32; 4],
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn InputInt(
+        pub unsafe fn InputInt(
             label: &CxxString,
-            v: &mut i32,
+            v: *mut i32,
             step: i32,
             step_fast: i32,
             flags: i32,
         ) -> bool;
-        pub fn InputInt2(label: &CxxString, v: &mut [i32; 2], flags: i32) -> bool;
-        pub fn InputInt3(label: &CxxString, v: &mut [i32; 3], flags: i32) -> bool;
-        pub fn InputInt4(label: &CxxString, v: &mut [i32; 4], flags: i32) -> bool;
-        pub fn InputDouble(
+        pub unsafe fn InputInt2(label: &CxxString, v: *mut [i32; 2], flags: i32) -> bool;
+        pub unsafe fn InputInt3(label: &CxxString, v: *mut [i32; 3], flags: i32) -> bool;
+        pub unsafe fn InputInt4(label: &CxxString, v: *mut [i32; 4], flags: i32) -> bool;
+        pub unsafe fn InputDouble(
             label: &CxxString,
-            v: &mut f64,
+            v: *mut f64,
             step: f64,
             step_fast: f64,
             format: &CxxString,
             flags: i32,
         ) -> bool;
-        pub fn ColorEdit3(label: &CxxString, col: &mut [f32; 3], flags: i32) -> bool;
-        pub fn ColorEdit4(label: &CxxString, col: &mut [f32; 4], flags: i32) -> bool;
-        pub fn ColorPicker3(label: &CxxString, col: &mut [f32; 3], flags: i32) -> bool;
-        pub fn ColorPicker4(
+        pub unsafe fn ColorEdit3(label: &CxxString, col: *mut [f32; 3], flags: i32) -> bool;
+        pub unsafe fn ColorEdit4(label: &CxxString, col: *mut [f32; 4], flags: i32) -> bool;
+        pub unsafe fn ColorPicker3(label: &CxxString, col: *mut [f32; 3], flags: i32) -> bool;
+        pub unsafe fn ColorPicker4(
             label: &CxxString,
-            col: &mut [f32; 4],
+            col: *mut [f32; 4],
             flags: i32,
             ref_col: &[f32; 4],
         ) -> bool;
-        pub fn ColorButton(
+        pub unsafe fn ColorButton(
             desc_id: &CxxString,
-            col: &mut [f32; 4],
+            col: *mut [f32; 4],
             flags: i32,
             size: &[f32; 2],
         ) -> bool;
@@ -411,14 +432,20 @@ mod imgui_rs {
         pub fn TreePop();
         pub fn GetTreeNodeToLabelSpacing() -> f32;
         pub fn CollapsingHeader(label: &CxxString, flags: i32) -> bool;
+        pub unsafe fn CollapsingHeaderCtrl(label: &CxxString, open: *mut bool, flags: i32) -> bool;
         pub fn SetNextItemOpen(is_open: bool, cond: i32);
         pub fn SetNextItemStorageID(storage_id: u32);
-        pub fn Selectable(label: &CxxString, selected: bool, flags: i32, size: &[f32; 2]) -> bool;
+        pub unsafe fn Selectable(
+            label: &CxxString,
+            selected: *mut bool,
+            flags: i32,
+            size: &[f32; 2],
+        ) -> bool;
         pub fn BeginListBox(label: &CxxString, size: &[f32; 2]) -> bool;
         pub fn EndListBox();
-        pub fn ListBox(
+        pub unsafe fn ListBox(
             label: &CxxString,
-            current_item: &mut i32,
+            current_item: *mut i32,
             items: &Vec<String>,
             height_in_items: i32,
         ) -> bool;
@@ -443,7 +470,7 @@ mod imgui_rs {
         pub fn SetItemTooltip(text: &CxxString);
 
         pub fn BeginPopup(str_id: &CxxString, flags: i32) -> bool;
-        pub fn BeginPopupModal(name: &CxxString, open: &mut bool, flags: i32) -> bool;
+        pub unsafe fn BeginPopupModal(name: &CxxString, open: *mut bool, flags: i32) -> bool;
         pub fn EndPopup();
 
         pub fn OpenPopup(str_id: &CxxString, flags: i32);
@@ -476,6 +503,7 @@ mod imgui_rs {
         pub fn TableSetupScrollFreeze(cols: i32, rows: i32);
         pub fn TableHeadersRow();
         pub fn TableHeader(label: &CxxString);
+        pub fn TableGetSortSpecs() -> *mut ImGuiTableSortSpecs;
         pub fn TableGetColumnCount() -> i32;
         pub fn TableGetColumnIndex() -> i32;
         pub fn TableGetRowIndex() -> i32;
@@ -495,7 +523,7 @@ mod imgui_rs {
 
         pub fn BeginTabBar(str_id: &CxxString, flags: i32) -> bool;
         pub fn EndTabBar();
-        pub fn BeginTabItem(str_id: &CxxString, open: &mut bool, flags: i32) -> bool;
+        pub unsafe fn BeginTabItem(str_id: &CxxString, open: *mut bool, flags: i32) -> bool;
         pub fn EndTabItem();
         pub fn TabItemButton(label: &CxxString, flags: i32) -> bool;
         pub fn SetTabItemClosed(tab_or_docked_window_label: &CxxString);
@@ -613,6 +641,26 @@ impl ImVec4 {
     }
     pub fn to_vec(&self) -> [f32; 4] {
         [self.x, self.y, self.z, self.w]
+    }
+}
+
+#[derive(Clone, Copy, Default)]
+pub struct ImRgb {
+    r: f32,
+    g: f32,
+    b: f32,
+}
+
+impl ImRgb {
+    pub fn new(vec: [f32; 3]) -> ImRgb {
+        Self {
+            r: vec[0],
+            g: vec[1],
+            b: vec[2],
+        }
+    }
+    pub fn to_vec(&self) -> [f32; 3] {
+        [self.r, self.g, self.b]
     }
 }
 
@@ -1732,14 +1780,14 @@ pub fn arrow_button(str_id: &str, dir: ImGuiDir) -> bool {
     imgui_rs::ArrowButton(&str_id, to_flag!(dir))
 }
 
-pub fn checkbox(label: &str, v: &mut bool) -> bool {
+pub fn checkbox(label: &str, v: *mut bool) -> bool {
     cxx::let_cxx_string!(label = label);
-    imgui_rs::Checkbox(&label, v)
+    unsafe { imgui_rs::Checkbox(&label, v) }
 }
 
-pub fn checkbox_flags(label: &str, flags: &mut i32, flags_value: i32) -> bool {
+pub fn checkbox_flags(label: &str, flags: *mut i32, flags_value: i32) -> bool {
     cxx::let_cxx_string!(label = label);
-    imgui_rs::CheckboxFlags(&label, flags, flags_value)
+    unsafe { imgui_rs::CheckboxFlags(&label, flags, flags_value) }
 }
 
 pub fn radio_button_bool(label: &str, active: bool) -> bool {
@@ -1747,9 +1795,9 @@ pub fn radio_button_bool(label: &str, active: bool) -> bool {
     imgui_rs::RadioButtonBool(&label, active)
 }
 
-pub fn radio_button(label: &str, v: &mut i32, v_button: i32) -> bool {
+pub fn radio_button(label: &str, v: *mut i32, v_button: i32) -> bool {
     cxx::let_cxx_string!(label = label);
-    imgui_rs::RadioButton(&label, v, v_button)
+    unsafe { imgui_rs::RadioButton(&label, v, v_button) }
 }
 
 pub fn progress_bar(fraction: f32, size_arg: Option<ImVec2>, overlay: Option<&str>) {
@@ -1780,15 +1828,15 @@ pub fn end_combo() {
     imgui_rs::EndCombo()
 }
 
-pub fn combo(label: &str, current_item: &mut i32, items: Vec<&str>, height_in_items: i32) -> bool {
+pub fn combo(label: &str, current_item: *mut i32, items: Vec<&str>, height_in_items: i32) -> bool {
     cxx::let_cxx_string!(label = label);
     let items = items.iter().map(|s| s.to_string()).collect();
-    imgui_rs::Combo(&label, current_item, &items, height_in_items)
+    unsafe { imgui_rs::Combo(&label, current_item, &items, height_in_items) }
 }
 
 pub fn drag_float(
     label: &str,
-    v: &mut f32,
+    v: *mut f32,
     v_speed: f32,
     v_min: f32,
     v_max: f32,
@@ -1798,20 +1846,22 @@ pub fn drag_float(
     cxx::let_cxx_string!(label = label);
     let format = format.unwrap_or("%.3f");
     cxx::let_cxx_string!(format = format);
-    imgui_rs::DragFloat(
-        &label,
-        v,
-        v_speed,
-        v_min,
-        v_max,
-        &format,
-        to_flag!(flags, ImGuiSliderFlags::None),
-    )
+    unsafe {
+        imgui_rs::DragFloat(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
 }
 
 pub fn drag_float2(
     label: &str,
-    v: &mut [f32; 2],
+    v: *mut [f32; 2],
     v_speed: f32,
     v_min: f32,
     v_max: f32,
@@ -1821,20 +1871,22 @@ pub fn drag_float2(
     cxx::let_cxx_string!(label = label);
     let format = format.unwrap_or("%.3f");
     cxx::let_cxx_string!(format = format);
-    imgui_rs::DragFloat2(
-        &label,
-        v,
-        v_speed,
-        v_min,
-        v_max,
-        &format,
-        to_flag!(flags, ImGuiSliderFlags::None),
-    )
+    unsafe {
+        imgui_rs::DragFloat2(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
 }
 
 pub fn drag_float3(
     label: &str,
-    v: &mut [f32; 3],
+    v: *mut [f32; 3],
     v_speed: f32,
     v_min: f32,
     v_max: f32,
@@ -1844,20 +1896,22 @@ pub fn drag_float3(
     cxx::let_cxx_string!(label = label);
     let format = format.unwrap_or("%.3f");
     cxx::let_cxx_string!(format = format);
-    imgui_rs::DragFloat3(
-        &label,
-        v,
-        v_speed,
-        v_min,
-        v_max,
-        &format,
-        to_flag!(flags, ImGuiSliderFlags::None),
-    )
+    unsafe {
+        imgui_rs::DragFloat3(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
 }
 
 pub fn drag_float4(
     label: &str,
-    v: &mut [f32; 4],
+    v: *mut [f32; 4],
     v_speed: f32,
     v_min: f32,
     v_max: f32,
@@ -1867,21 +1921,23 @@ pub fn drag_float4(
     cxx::let_cxx_string!(label = label);
     let format = format.unwrap_or("%.3f");
     cxx::let_cxx_string!(format = format);
-    imgui_rs::DragFloat4(
-        &label,
-        v,
-        v_speed,
-        v_min,
-        v_max,
-        &format,
-        to_flag!(flags, ImGuiSliderFlags::None),
-    )
+    unsafe {
+        imgui_rs::DragFloat4(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
 }
 
 pub fn drag_float_range2(
     label: &str,
-    v_current_min: &mut f32,
-    v_current_max: &mut f32,
+    v_current_min: *mut f32,
+    v_current_max: *mut f32,
     v_speed: f32,
     v_min: f32,
     v_max: f32,
@@ -1894,15 +1950,846 @@ pub fn drag_float_range2(
     cxx::let_cxx_string!(format = format);
     let format_max = format_max.unwrap_or("%.3f");
     cxx::let_cxx_string!(format_max = format_max);
-    imgui_rs::DragFloatRange2(
-        &label,
-        v_current_min,
-        v_current_max,
-        v_speed,
-        v_min,
-        v_max,
-        &format,
-        &format_max,
-        to_flag!(flags, ImGuiSliderFlags::None),
+    unsafe {
+        imgui_rs::DragFloatRange2(
+            &label,
+            v_current_min,
+            v_current_max,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            &format_max,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn drag_int(
+    label: &str,
+    v: *mut i32,
+    v_speed: f32,
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::DragInt(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn drag_int2(
+    label: &str,
+    v: *mut [i32; 2],
+    v_speed: f32,
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::DragInt2(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn drag_int3(
+    label: &str,
+    v: *mut [i32; 3],
+    v_speed: f32,
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::DragInt3(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn drag_int4(
+    label: &str,
+    v: *mut [i32; 4],
+    v_speed: f32,
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::DragInt4(
+            &label,
+            v,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn drag_int_range2(
+    label: &str,
+    v_current_min: *mut i32,
+    v_current_max: *mut i32,
+    v_speed: f32,
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    format_max: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    let format_max = format_max.unwrap_or("%d");
+    cxx::let_cxx_string!(format_max = format_max);
+    unsafe {
+        imgui_rs::DragIntRange2(
+            &label,
+            v_current_min,
+            v_current_max,
+            v_speed,
+            v_min,
+            v_max,
+            &format,
+            &format_max,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_float(
+    label: &str,
+    v: *mut f32,
+    v_min: f32,
+    v_max: f32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%.3f");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderFloat(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_float2(
+    label: &str,
+    v: *mut [f32; 2],
+    v_min: f32,
+    v_max: f32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%.3f");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderFloat2(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_float3(
+    label: &str,
+    v: *mut [f32; 3],
+    v_min: f32,
+    v_max: f32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%.3f");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderFloat3(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_float4(
+    label: &str,
+    v: *mut [f32; 4],
+    v_min: f32,
+    v_max: f32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%.3f");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderFloat4(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_angle(
+    label: &str,
+    v_rad: *mut f32,
+    v_degrees_min: f32,
+    v_degrees_max: f32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%.0f deg");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderAngle(
+            &label,
+            v_rad,
+            v_degrees_min,
+            v_degrees_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_int(
+    label: &str,
+    v: *mut i32,
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderInt(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_int2(
+    label: &str,
+    v: *mut [i32; 2],
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderInt2(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_int3(
+    label: &str,
+    v: *mut [i32; 3],
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderInt3(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn slider_int4(
+    label: &str,
+    v: *mut [i32; 4],
+    v_min: i32,
+    v_max: i32,
+    format: Option<&str>,
+    flags: Option<ImGuiSliderFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let format = format.unwrap_or("%d");
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::SliderInt4(
+            &label,
+            v,
+            v_min,
+            v_max,
+            &format,
+            to_flag!(flags, ImGuiSliderFlags::None),
+        )
+    }
+}
+
+pub fn input_text(label: &str, buf: &mut String, flags: Option<ImGuiInputTextFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::InputText(
+            &label,
+            buf.as_mut_vec(),
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_text_with_hint(
+    label: &str,
+    hint: &str,
+    buf: &mut String,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    cxx::let_cxx_string!(hint = hint);
+    unsafe {
+        imgui_rs::InputTextWithHint(
+            &label,
+            &hint,
+            buf.as_mut_vec(),
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_float(
+    label: &str,
+    v: *mut f32,
+    step: f32,
+    step_fast: f32,
+    format: &str,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::InputFloat(
+            &label,
+            v,
+            step,
+            step_fast,
+            &format,
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_float2(
+    label: &str,
+    v: *mut [f32; 2],
+    format: &str,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::InputFloat2(
+            &label,
+            v,
+            &format,
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_float3(
+    label: &str,
+    v: *mut [f32; 3],
+    format: &str,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::InputFloat3(
+            &label,
+            v,
+            &format,
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_float4(
+    label: &str,
+    v: *mut [f32; 4],
+    format: &str,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::InputFloat4(
+            &label,
+            v,
+            &format,
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_int(
+    label: &str,
+    v: *mut i32,
+    step: i32,
+    step_fast: i32,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::InputInt(
+            &label,
+            v,
+            step,
+            step_fast,
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn input_int2(label: &str, v: *mut [i32; 2], flags: Option<ImGuiInputTextFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe { imgui_rs::InputInt2(&label, v, to_flag!(flags, ImGuiInputTextFlags::None)) }
+}
+
+pub fn input_int3(label: &str, v: *mut [i32; 3], flags: Option<ImGuiInputTextFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe { imgui_rs::InputInt3(&label, v, to_flag!(flags, ImGuiInputTextFlags::None)) }
+}
+
+pub fn input_int4(label: &str, v: *mut [i32; 4], flags: Option<ImGuiInputTextFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe { imgui_rs::InputInt4(&label, v, to_flag!(flags, ImGuiInputTextFlags::None)) }
+}
+
+pub fn input_double(
+    label: &str,
+    v: &mut f64,
+    step: f64,
+    step_fast: f64,
+    format: &str,
+    flags: Option<ImGuiInputTextFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    cxx::let_cxx_string!(format = format);
+    unsafe {
+        imgui_rs::InputDouble(
+            &label,
+            v,
+            step,
+            step_fast,
+            &format,
+            to_flag!(flags, ImGuiInputTextFlags::None),
+        )
+    }
+}
+
+pub fn color_edit3(label: &str, col: &mut ImRgb, flags: Option<ImGuiColorEditFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::ColorEdit3(
+            &label,
+            // I dunno if this will actually work lol
+            &mut col.to_vec(),
+            to_flag!(flags, ImGuiColorEditFlags::None),
+        )
+    }
+}
+
+pub fn color_edit4(label: &str, col: &mut ImRgba, flags: Option<ImGuiColorEditFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::ColorEdit4(
+            &label,
+            &mut col.to_vec(),
+            to_flag!(flags, ImGuiColorEditFlags::None),
+        )
+    }
+}
+
+pub fn color_picker3(label: &str, col: &mut ImRgb, flags: Option<ImGuiColorEditFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::ColorPicker3(
+            &label,
+            &mut col.to_vec(),
+            to_flag!(flags, ImGuiColorEditFlags::None),
+        )
+    }
+}
+
+pub fn color_picker4(
+    label: &str,
+    col: &mut ImRgba,
+    flags: Option<ImGuiColorEditFlags>,
+    ref_col: ImVec4,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::ColorPicker4(
+            &label,
+            &mut col.to_vec(),
+            to_flag!(flags, ImGuiColorEditFlags::None),
+            &ref_col.to_vec(),
+        )
+    }
+}
+
+pub fn color_button(
+    desc_id: &str,
+    col: &mut ImRgba,
+    flags: Option<ImGuiColorEditFlags>,
+    size: ImVec2,
+) -> bool {
+    cxx::let_cxx_string!(desc_id = desc_id);
+    unsafe {
+        imgui_rs::ColorButton(
+            &desc_id,
+            &mut col.to_vec(),
+            to_flag!(flags, ImGuiColorEditFlags::None),
+            &size.to_vec(),
+        )
+    }
+}
+
+pub fn set_color_edit_options(flags: ImGuiColorEditFlags) {
+    imgui_rs::SetColorEditOptions(to_flag!(flags))
+}
+
+pub fn tree_node(label: &str) -> bool {
+    cxx::let_cxx_string!(label = label);
+    imgui_rs::TreeNode(&label)
+}
+
+pub fn tree_node_id(str_id: &str, fmt: &str) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    cxx::let_cxx_string!(fmt = fmt);
+    imgui_rs::TreeNodeWithId(&str_id, &fmt)
+}
+
+pub fn tree_node_ex(label: &str, flags: Option<ImGuiTreeNodeFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    imgui_rs::TreeNodeEx(&label, to_flag!(flags, ImGuiTreeNodeFlags::None))
+}
+
+pub fn tree_node_ex_id(str_id: &str, flags: ImGuiTreeNodeFlags, fmt: &str) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    cxx::let_cxx_string!(fmt = fmt);
+    imgui_rs::TreeNodeExWithId(&str_id, to_flag!(flags), &fmt)
+}
+
+pub fn tree_push(str_id: &str) {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::TreePush(&str_id)
+}
+
+pub fn tree_pop() {
+    imgui_rs::TreePop()
+}
+
+pub fn get_tree_node_to_label_spacing() -> f32 {
+    imgui_rs::GetTreeNodeToLabelSpacing()
+}
+
+pub fn collapsing_header(label: &str, flags: Option<ImGuiTreeNodeFlags>) -> bool {
+    cxx::let_cxx_string!(label = label);
+    imgui_rs::CollapsingHeader(&label, to_flag!(flags, ImGuiTreeNodeFlags::None))
+}
+
+pub fn collapsing_header_ctrl(
+    label: &str,
+    open: *mut bool,
+    flags: Option<ImGuiTreeNodeFlags>,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::CollapsingHeaderCtrl(&label, open, to_flag!(flags, ImGuiTreeNodeFlags::None))
+    }
+}
+
+pub fn set_next_item_open(is_open: bool, cond: Option<ImGuiCond>) {
+    imgui_rs::SetNextItemOpen(is_open, to_flag!(cond, ImGuiCond::None))
+}
+
+pub fn selectable(
+    label: &str,
+    selected: *mut bool,
+    flags: Option<ImGuiSelectableFlags>,
+    size: ImVec2,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    unsafe {
+        imgui_rs::Selectable(
+            &label,
+            selected,
+            to_flag!(flags, ImGuiSelectableFlags::None),
+            &size.to_vec(),
+        )
+    }
+}
+
+pub fn list_box(
+    label: &str,
+    current_item: *mut i32,
+    items: Vec<&str>,
+    height_in_items: i32,
+) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let items = items.iter().map(|s| s.to_string()).collect();
+    unsafe { imgui_rs::ListBox(&label, current_item, &items, height_in_items) }
+}
+
+pub fn begin_main_menu_bar() -> bool {
+    imgui_rs::BeginMainMenuBar()
+}
+
+pub fn end_main_menu_bar() {
+    imgui_rs::EndMainMenuBar()
+}
+
+pub fn begin_menu_bar() -> bool {
+    imgui_rs::BeginMenuBar()
+}
+
+pub fn end_menu_bar() {
+    imgui_rs::EndMenuBar()
+}
+
+pub fn begin_menu(label: &str, enabled: bool) -> bool {
+    cxx::let_cxx_string!(label = label);
+    imgui_rs::BeginMenu(&label, enabled)
+}
+
+pub fn end_menu() {
+    imgui_rs::EndMenu()
+}
+
+pub fn menu_item(label: &str, shortcut: Option<&str>, selected: bool, enabled: bool) -> bool {
+    cxx::let_cxx_string!(label = label);
+    let shortcut = shortcut.unwrap_or("");
+    cxx::let_cxx_string!(shortcut = shortcut);
+    imgui_rs::MenuItem(&label, &shortcut, selected, enabled)
+}
+
+pub fn begin_tooltip() {
+    imgui_rs::BeginTooltip()
+}
+
+pub fn end_tooltip() {
+    imgui_rs::EndTooltip()
+}
+
+pub fn set_tooltip(fmt: &str, _args: Vec<&str>) {
+    cxx::let_cxx_string!(fmt = fmt);
+    imgui_rs::SetTooltip(&fmt)
+}
+
+pub fn begin_popup(str_id: &str, flags: Option<ImGuiWindowFlags>) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::BeginPopup(&str_id, to_flag!(flags, ImGuiWindowFlags::None))
+}
+
+pub fn begin_popup_modal(name: &str, open: *mut bool, flags: Option<ImGuiWindowFlags>) -> bool {
+    cxx::let_cxx_string!(name = name);
+    unsafe { imgui_rs::BeginPopupModal(&name, open, to_flag!(flags, ImGuiWindowFlags::None)) }
+}
+
+pub fn end_popup() {
+    imgui_rs::EndPopup()
+}
+
+pub fn open_popup(str_id: &str, flags: Option<ImGuiPopupFlags>) {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::OpenPopup(
+        &str_id,
+        to_flag!(flags, ImGuiPopupFlags::NoneOrMouseButtonLeft),
     )
+}
+
+pub fn open_popup_on_item_click(str_id: &str, flags: Option<ImGuiPopupFlags>) {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::OpenPopupOnItemClick(&str_id, to_flag!(flags, ImGuiPopupFlags::MouseButtonRight))
+}
+
+pub fn close_current_popup() {
+    imgui_rs::CloseCurrentPopup()
+}
+
+pub fn begin_popup_context_item(str_id: &str, flags: Option<ImGuiPopupFlags>) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::BeginPopupContextItem(&str_id, to_flag!(flags, ImGuiPopupFlags::MouseButtonRight))
+}
+
+pub fn begin_popup_context_window(str_id: &str, flags: Option<ImGuiPopupFlags>) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::BeginPopupContextWindow(&str_id, to_flag!(flags, ImGuiPopupFlags::MouseButtonRight))
+}
+
+pub fn begin_popup_context_void(str_id: &str, flags: Option<ImGuiPopupFlags>) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::BeginPopupContextVoid(&str_id, to_flag!(flags, ImGuiPopupFlags::MouseButtonRight))
+}
+
+pub fn is_popup_open(str_id: &str, flags: Option<ImGuiPopupFlags>) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::IsPopupOpen(
+        &str_id,
+        to_flag!(flags, ImGuiPopupFlags::NoneOrMouseButtonLeft),
+    )
+}
+
+pub fn begin_table(
+    str_id: &str,
+    column_count: i32,
+    flags: Option<ImGuiTableFlags>,
+    outer_size: Option<ImVec2>,
+    inner_width: Option<f32>,
+) -> bool {
+    cxx::let_cxx_string!(str_id = str_id);
+    imgui_rs::BeginTable(
+        &str_id,
+        column_count,
+        to_flag!(flags, ImGuiTableFlags::None),
+        &outer_size.unwrap_or(ImVec2::new([0.0, 0.0])).to_vec(),
+        inner_width.unwrap_or(0.0),
+    )
+}
+
+pub fn end_table() {
+    imgui_rs::EndTable()
+}
+
+pub fn table_next_row(row_flags: Option<ImGuiTableRowFlags>, min_row_height: Option<f32>) {
+    imgui_rs::TableNextRow(
+        to_flag!(row_flags, ImGuiTableRowFlags::None),
+        min_row_height.unwrap_or(0.0),
+    )
+}
+
+pub fn table_next_column() -> bool {
+    imgui_rs::TableNextColumn()
+}
+
+pub fn table_set_column_index(column_n: i32) -> bool {
+    imgui_rs::TableSetColumnIndex(column_n)
+}
+
+pub fn table_setup_column(
+    label: &str,
+    flags: Option<ImGuiTableColumnFlags>,
+    init_width_or_weight: Option<f32>,
+    user_id: Option<u32>,
+) {
+    cxx::let_cxx_string!(label = label);
+    imgui_rs::TableSetupColumn(
+        &label,
+        to_flag!(flags, ImGuiTableColumnFlags::None),
+        init_width_or_weight.unwrap_or(0.0),
+        user_id.unwrap_or(0),
+    )
+}
+
+pub fn table_setup_scroll_freeze(left_columns: i32, right_columns: i32) {
+    imgui_rs::TableSetupScrollFreeze(left_columns, right_columns)
+}
+
+pub fn table_headers_row() {
+    imgui_rs::TableHeadersRow()
+}
+
+pub fn table_header(label: &str) {
+    cxx::let_cxx_string!(label = label);
+    imgui_rs::TableHeader(&label)
+}
+
+pub fn table_get_sort_specs() -> *const ImGuiTableSortSpecs {
+    imgui_rs::TableGetSortSpecs() as *const ImGuiTableSortSpecs
+}
+
+pub fn table_get_column_count() -> i32 {
+    imgui_rs::TableGetColumnCount()
+}
+
+pub fn table_get_column_index() -> i32 {
+    imgui_rs::TableGetColumnIndex()
 }

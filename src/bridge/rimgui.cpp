@@ -772,6 +772,10 @@ bool rimgui::ColorButton(const std::string &desc_id, ARRAY_FLOAT(4) * col,
                             to_imvec2(size));
 }
 
+void rimgui::SetColorEditOptions(int flags) {
+  ImGui::SetColorEditOptions(flags);
+}
+
 void rimgui::Columns(int count, const std::string &id, bool border) {
   ImGui::Columns(count, id.c_str(), border);
 }
@@ -977,12 +981,56 @@ bool rimgui::IsMouseHoveringRect(const ARRAY_FLOAT(2) & r_min,
   return ImGui::IsMouseHoveringRect(to_imvec2(r_min), to_imvec2(r_max), clip);
 }
 
+bool rimgui::IsMousePosValid(const ARRAY_FLOAT(2) & pos) {
+  const auto imvec_pos = to_imvec2(pos);
+  return ImGui::IsMousePosValid(&imvec_pos);
+}
+
+bool rimgui::IsAnyMouseDown() { return ImGui::IsAnyMouseDown(); }
+
+ARRAY_FLOAT(2) rimgui::GetMousePos() {
+  return from_imvec2(ImGui::GetMousePos());
+}
+
+ARRAY_FLOAT(2) rimgui::GetMousePosOnOpeningCurrentPopup() {
+  return from_imvec2(ImGui::GetMousePosOnOpeningCurrentPopup());
+}
+
+bool rimgui::IsMouseDragging(int button, float lock_threshold) {
+  return ImGui::IsMouseDragging(button, lock_threshold);
+}
+
+ARRAY_FLOAT(2) rimgui::GetMouseDragDelta(int button, float lock_threshold) {
+  return from_imvec2(ImGui::GetMouseDragDelta(button, lock_threshold));
+}
+
+void rimgui::ResetMouseDragDelta(int button) {
+  ImGui::ResetMouseDragDelta(button);
+}
+
+int rimgui::GetMouseCursor() { return ImGui::GetMouseCursor(); }
+
+void rimgui::SetMouseCursor(int cursor) { ImGui::SetMouseCursor(cursor); }
+
+void rimgui::SetNextFrameWantCaptureMouse(bool want_capture_mouse) {
+  ImGui::SetNextFrameWantCaptureMouse(want_capture_mouse);
+}
+
 bool rimgui::TreeNode(const std::string &label) {
   return ImGui::TreeNode(label.c_str());
 }
 
+bool rimgui::TreeNodeWithId(const std::string &str_id, const std::string &fmt) {
+  return ImGui::TreeNode(str_id.c_str(), fmt.c_str());
+}
+
 bool rimgui::TreeNodeEx(const std::string &label, int flags) {
   return ImGui::TreeNodeEx(label.c_str(), flags);
+}
+
+bool rimgui::TreeNodeExWithId(const std::string &str_id, int flags,
+                              const std::string &fmt) {
+  return ImGui::TreeNodeEx(str_id.c_str(), flags, fmt.c_str());
 }
 
 void rimgui::TreePush(const std::string &str_id) {
@@ -1006,6 +1054,10 @@ bool rimgui::CollapsingHeaderCtrl(const std::string &label, bool *p_open,
 
 void rimgui::SetNextItemOpen(bool is_open, int cond) {
   ImGui::SetNextItemOpen(is_open, cond);
+}
+
+void rimgui::SetNextItemStorageID(uint32_t id) {
+  // ImGui::SetNextItemStorageID(id);
 }
 
 bool rimgui::Selectable(const std::string &label, bool *selected, int flags,
@@ -1133,6 +1185,10 @@ void rimgui::TableHeader(const std::string &label) {
   ImGui::TableHeader(label.c_str());
 }
 
+ImGuiTableSortSpecs* rimgui::TableGetSortSpecs() {
+  return ImGui::TableGetSortSpecs();
+}
+
 int rimgui::TableGetColumnCount() { return ImGui::TableGetColumnCount(); }
 
 int rimgui::TableGetRowIndex() { return ImGui::TableGetRowIndex(); }
@@ -1154,3 +1210,12 @@ void rimgui::TableSetColumnEnabled(int column_n, bool enabled) {
 }
 
 bool rimgui::BeginItemTooltip() { return false; }
+
+void rimgui::SetItemTooltip(const std::string &text) {
+  
+}
+
+rust::String rimgui::GetClipboardText() { return ImGui::GetClipboardText(); }
+void rimgui::SetClipboardText(const std::string& text) {
+  ImGui::SetClipboardText(text.c_str());
+}

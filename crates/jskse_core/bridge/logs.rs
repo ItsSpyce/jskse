@@ -9,10 +9,10 @@
 use simplelog::*;
 use std::fs::File;
 
-use crate::skse_poly;
+use crate::bridge::clib::skse;
 
 pub fn configure_logging() {
-    let log_directory = match skse_poly::log_directory() {
+    let log_directory = match skse::log_directory() {
         Ok(dir) => dir,
         Err(err) => {
             log::error!("Error getting log directory: {}", err);

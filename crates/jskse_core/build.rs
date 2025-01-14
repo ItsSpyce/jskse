@@ -1,80 +1,57 @@
 extern crate cbindgen;
 extern crate cxx_build;
 
-use deno_core::{
-    extension,
-    snapshot::{create_snapshot, CreateSnapshotOptions},
-};
-use std::{
-    env,
-    path::{Path, PathBuf},
-};
-use std::{fs, io};
+use std::io;
+use std::{env, path::Path};
 
 static BRIDGE_FILES: &[&str] = &[
-    "src/cxx.rs",
-    "src/bridge/cosave.rs",
-    "src/bridge/rimgui.rs",
-    "src/bridge/logs.rs",
-    "src/bridge/strings.rs",
-    "src/bridge/wrappers.rs",
+    "cxx.rs",
+    "bridge/cosave.rs",
+    "bridge/rimgui.rs",
+    "bridge/logs.rs",
+    "bridge/strings.rs",
+    "bridge/wrappers.rs",
+    "bridge/clib/re.rs",
+    "bridge/clib/rel.rs",
+    "bridge/clib/skse.rs",
 ];
 
+struct BindgenDescription<'a> {
+    pub filename: &'a str,
+    pub includes: Vec<&'a str>,
+}
+
+static BINDGEN_FILES: &[BindgenDescription] = &[BindgenDescription {
+    filename: "bindgen/clib.rs",
+    includes: vec![""],
+}];
+
 fn main() {
-    // build JS snapshot
-    extension!(
-        jskse_extension,
-        esm_entry_point = "jskse:runtime",
-        esm = [
-            dir "lib",
-            "jskse:runtime" = "runtime.js"
-        ],
-    );
-
-    let options = CreateSnapshotOptions {
-        cargo_manifest_dir: env!("CARGO_MANIFEST_DIR"),
-        startup_snapshot: None,
-        extensions: vec![jskse_extension::init_ops_and_esm()],
-        with_runtime_cb: None,
-        skip_op_registration: false,
-        extension_transpiler: None,
-    };
-    let warmup_script = None;
-    let snapshot = create_snapshot(options, warmup_script).expect("Error creating snapshot");
-
-    let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
-    let file_path = out_dir.join("jskse.bin");
-    fs::write(file_path, snapshot.output).expect("Failed to write snapshot");
-
-    for path in snapshot.files_loaded_during_snapshot {
-        println!("cargo:rerun-if-changed={}", path.display());
-    }
-
     // build cbindgen bindings
-    let root_dir = find_nearest_cmake();
-    if root_dir.is_err() {
-        println!("cargo:warning=Could not find CMakeLists.txt in any parent directory");
-        return;
-    }
-    let root_dir = root_dir.unwrap();
+    let root_dir = find_nearest_cmake().unwrap_or_else(|_| {
+        panic!("cargo:warning=Could not find CMakeLists.txt in any parent directory");
+    });
+    let root_dir = Path::new(&root_dir);
     let crate_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
     let crate_dir = Path::new(&crate_dir);
     let header_file = format!(
-        "{root_dir}/include/{}.h",
+        "{}/include/{}.h",
+        root_dir.to_str().unwrap(),
         env::var("CARGO_PKG_NAME").unwrap()
     );
-    println!("Generating bindings for {}", header_file);
-    cbindgen::Builder::new()
-        .with_crate(crate_dir.to_str().unwrap())
-        .with_pragma_once(true)
-        .with_cpp_compat(true)
-        .with_language(cbindgen::Language::Cxx)
-        .with_sys_include("imgui.h")
-        .with_namespace("cbindgen")
-        .include_item("cxx.rs")
-        .generate()
-        .expect("Unable to generate bindings")
-        .write_to_file(header_file.clone());
+
+    for bindgen in BINDGEN_FILES {
+        cbindgen::Builder::new()
+            .with_crate(crate_dir.to_str().unwrap())
+            .with_pragma_once(true)
+            .with_cpp_compat(true)
+            .with_language(cbindgen::Language::Cxx)
+            .with_namespace("bindgen")
+            .include_item("cxx.rs")
+            .generate()
+            .expect(format!("Unable to generate bindings for {}", bindgen.filename).as_str())
+            .write_to_file(root_dir.join(format!("include/{}.h", bindgen.filename)));
+    }
 
     // build cxx bindings
     let _bridge = cxx_build::bridges(BRIDGE_FILES);

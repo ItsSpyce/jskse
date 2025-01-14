@@ -14,7 +14,7 @@ using TableColumnSortSpecs = ImGuiTableColumnSortSpecs;
 
 bool Begin(const std::string& name, bool* open, int flags);
 void End();
-bool BeginChild(const std::string& id, const ARRAY_FLOAT(2)& size,
+bool BeginChild(const std::string& id, const ARRAY_FLOAT(2) & size,
                 int child_flags, int window_flags);
 void EndChild();
 bool IsWindowAppearing();
@@ -163,11 +163,11 @@ bool Combo(const std::string& label, int* current_item,
 
 bool DragFloat(const std::string& label, float* v, float v_speed, float v_min,
                float v_max, const std::string& format, int flags);
-bool DragFloat2(const std::string& label, ARRAY_FLOAT(2)* v, float v_speed,
+bool DragFloat2(const std::string& label, ARRAY_FLOAT(2) * v, float v_speed,
                 float v_min, float v_max, const std::string& format, int flags);
-bool DragFloat3(const std::string& label, ARRAY_FLOAT(3)* v, float v_speed,
+bool DragFloat3(const std::string& label, ARRAY_FLOAT(3) * v, float v_speed,
                 float v_min, float v_max, const std::string& format, int flags);
-bool DragFloat4(const std::string& label, ARRAY_FLOAT(4)* v, float v_speed,
+bool DragFloat4(const std::string& label, ARRAY_FLOAT(4) * v, float v_speed,
                 float v_min, float v_max, const std::string& format, int flags);
 bool DragFloatRange2(const std::string& label, float* v_current_min,
                      float* v_current_max, float v_speed, float v_min,
@@ -299,7 +299,7 @@ void TableSetupScrollFreeze(int cols, int rows);
 void TableHeadersRow();
 void TableHeader(const std::string& label);
 
-ImGuiTableSortSpecs *TableGetSortSpecs();
+ImGuiTableSortSpecs* TableGetSortSpecs();
 int TableGetColumnCount();
 int TableGetColumnIndex();
 int TableGetRowIndex();

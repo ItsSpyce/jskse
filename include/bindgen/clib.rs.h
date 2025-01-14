@@ -6,6 +6,6 @@
 #include <ostream>
 #include <new>
 
-namespace cbindgen {
+namespace bindgen {
 
-}  // namespace cbindgen
+}  // namespace bindgen
